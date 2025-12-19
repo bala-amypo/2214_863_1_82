@@ -1,6 +1,8 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(
@@ -16,42 +18,34 @@ public class EmployeeProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String employeeId;
-
-    @Column(nullable = false)
+    private String fullName;
     private String email;
+    private String teamName;
+    private String role;
+    private Boolean active;
 
-    @Column(nullable = false)
-    private Boolean active = true;
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<ProductivityMetricRecord> metrics;
 
     public EmployeeProfile() {}
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId) {
+    public EmployeeProfile(String employeeId, String fullName, String email,
+                           String teamName, String role, Boolean active) {
         this.employeeId = employeeId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    
-    public void setEmail(String email) {
+        this.fullName = fullName;
         this.email = email;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
+        this.teamName = teamName;
+        this.role = role;
         this.active = active;
     }
+
+    @PrePersist
+    void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    // getters and setters (ALL fields)
 }

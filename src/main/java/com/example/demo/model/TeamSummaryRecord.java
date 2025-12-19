@@ -1,10 +1,8 @@
-package com.example.demo.model;
-
-import jakarta.persistence.*;
-import java.time.LocalDate;
-
 @Entity
-@Table(name = "team_summaries")
+@Table(
+    name = "team_summary_records",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"teamName", "summaryDate"})
+)
 public class TeamSummaryRecord {
 
     @Id
@@ -13,44 +11,19 @@ public class TeamSummaryRecord {
 
     private String teamName;
     private LocalDate summaryDate;
-    private double averageProductivity;
-    private long anomalyCount;
+    private Double avgHoursLogged;
+    private Double avgTasksCompleted;
+    private Double avgScore;
+    private Integer anomalyCount;
+    private LocalDateTime generatedAt;
 
     public TeamSummaryRecord() {}
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTeamName() {
-        return teamName;
-    }
-
-    public void setTeamName(String teamName) {
+    public TeamSummaryRecord(String teamName, LocalDate summaryDate) {
         this.teamName = teamName;
-    }
-
-    public LocalDate getSummaryDate() {
-        return summaryDate;
-    }
-
-    public void setSummaryDate(LocalDate summaryDate) {
         this.summaryDate = summaryDate;
+        this.generatedAt = LocalDateTime.now();
     }
 
-    public double getAverageProductivity() {
-        return averageProductivity;
-    }
-
-    public void setAverageProductivity(double averageProductivity) {
-        this.averageProductivity = averageProductivity;
-    }
-
-    public long getAnomalyCount() {
-        return anomalyCount;
-    }
-
-    public void setAnomalyCount(long anomalyCount) {
-        this.anomalyCount = anomalyCount;
-    }
+    // getters and setters
 }

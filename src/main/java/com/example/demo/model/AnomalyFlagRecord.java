@@ -1,9 +1,5 @@
-package com.example.demo.model;
-
-import jakarta.persistence.*;
-
 @Entity
-@Table(name = "anomaly_flags")
+@Table(name = "anomaly_flag_records")
 public class AnomalyFlagRecord {
 
     @Id
@@ -13,45 +9,27 @@ public class AnomalyFlagRecord {
     private Long employeeId;
     private Long metricId;
     private String ruleCode;
-
-    @Column(nullable = false)
+    private String severity;
+    private String details;
+    private LocalDateTime flaggedAt;
     private Boolean resolved = false;
+
+    @ManyToOne
+    @JoinColumn(name = "metric_id", insertable = false, updatable = false)
+    private ProductivityMetricRecord metric;
 
     public AnomalyFlagRecord() {}
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
+    public AnomalyFlagRecord(Long employeeId, Long metricId,
+                             String ruleCode, String severity, String details) {
         this.employeeId = employeeId;
-    }
-
-    public Long getMetricId() {
-        return metricId;
-    }
-
-    public void setMetricId(Long metricId) {
         this.metricId = metricId;
-    }
-
-    public String getRuleCode() {
-        return ruleCode;
-    }
-
-    public void setRuleCode(String ruleCode) {
         this.ruleCode = ruleCode;
+        this.severity = severity;
+        this.details = details;
+        this.flaggedAt = LocalDateTime.now();
+        this.resolved = false;
     }
 
-    public Boolean getResolved() {
-        return resolved;
-    }
-
-    public void setResolved(Boolean resolved) {
-        this.resolved = resolved;
-    }
+    // getters and setters
 }

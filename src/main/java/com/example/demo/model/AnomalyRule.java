@@ -1,7 +1,3 @@
-package com.example.demo.model;
-
-import jakarta.persistence.*;
-
 @Entity
 @Table(
     name = "anomaly_rules",
@@ -13,31 +9,22 @@ public class AnomalyRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String ruleCode;
-
-    @Column(nullable = false)
-    private Boolean active = true;
+    private String description;
+    private String thresholdType;
+    private Double thresholdValue;
+    private Boolean active;
 
     public AnomalyRule() {}
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getRuleCode() {
-        return ruleCode;
-    }
-
-    public void setRuleCode(String ruleCode) {
+    public AnomalyRule(String ruleCode, String description,
+                       String thresholdType, Double thresholdValue, Boolean active) {
         this.ruleCode = ruleCode;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
+        this.description = description;
+        this.thresholdType = thresholdType;
+        this.thresholdValue = thresholdValue;
         this.active = active;
     }
+
+    // getters and setters
 }

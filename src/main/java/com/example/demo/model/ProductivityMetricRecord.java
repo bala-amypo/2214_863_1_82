@@ -1,13 +1,15 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(
-    name = "productivity_metrics",
+    name = "productivity_metric_records",
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"employeeId", "date"})
+        @UniqueConstraint(columnNames = {"employee_id", "date"})
     }
 )
 public class ProductivityMetricRecord {
@@ -16,70 +18,33 @@ public class ProductivityMetricRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long employeeId;
-
-    @Column(nullable = false)
     private LocalDate date;
+    private Double hoursLogged;
+    private Integer tasksCompleted;
+    private Integer meetingsAttended;
+    private Double productivityScore;
 
-    private double hours;
-    private int tasks;
-    private int meetings;
+    @Column(columnDefinition = "TEXT")
+    private String rawDataJson;
 
-    @Column(nullable = false)
-    private double productivityScore;
+    private LocalDateTime submittedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private EmployeeProfile employee;
+
+    @OneToMany(mappedBy = "metric", cascade = CascadeType.ALL)
+    private List<AnomalyFlagRecord> anomalies;
 
     public ProductivityMetricRecord() {}
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-    
-    public void setDate(LocalDate date) {
+    public ProductivityMetricRecord(LocalDate date, Double hoursLogged,
+                                    Integer tasksCompleted, Integer meetingsAttended) {
         this.date = date;
+        this.hoursLogged = hoursLogged;
+        this.tasksCompleted = tasksCompleted;
+        this.meetingsAttended = meetingsAttended;
     }
 
-    public double getHours() {
-        return hours;
-    }
-
-    public void setHours(double hours) {
-        this.hours = hours;
-    }
-
-    public int getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(int tasks) {
-        this.tasks = tasks;
-    }
-
-    public int getMeetings() {
-        return meetings;
-    }
-
-    public void setMeetings(int meetings) {
-        this.meetings = meetings;
-    }
-
-    public double getProductivityScore() {
-        return productivityScore;
-    }
-
-    public void setProductivityScore(double productivityScore) {
-        this.productivityScore = productivityScore;
-    }
+    // getters and setters
 }
