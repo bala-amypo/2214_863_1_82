@@ -30,6 +30,6 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
 
     @Override
     public List<ProductivityMetricRecord> getMetricsForEmployee(Long employeeId) {
-        return productivityMetricRecordRepository.findByEmployeeProfileId(employeeId);
+        return productivityMetricRecordRepository.findByEmployeeId(employeeId);
     }
 }

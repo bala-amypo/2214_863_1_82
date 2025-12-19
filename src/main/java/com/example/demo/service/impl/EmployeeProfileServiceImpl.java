@@ -34,7 +34,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
 
     @Override
     public EmployeeProfile findByEmployeeId(String employeeId) {
-        return employeeProfileRepository.findByEmail(employeeId)
+        return employeeProfileRepository.findByEmployeeId(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
     }
 }
