@@ -1,50 +1,83 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(
-    name = "productivity_metric_records",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"employee_id", "date"})
-    }
-)
+@Table(name = "productivity_metrics")
 public class ProductivityMetricRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date;
-    private Double hoursLogged;
-    private Integer tasksCompleted;
-    private Integer meetingsAttended;
-    private Double productivityScore;
+    @ManyToOne
+    @JoinColumn(name = "employee_profile_id", nullable = false)
+    @NotNull
+    private EmployeeProfile employeeProfile;
 
-    @Column(columnDefinition = "TEXT")
-    private String rawDataJson;
+    @NotNull
+    @Column(nullable = false)
+    private Double score;
+
+    @NotNull
+    @Column(nullable = false)
+    private LocalDate recordedDate;
 
     private LocalDateTime submittedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private EmployeeProfile employee;
-
-    @OneToMany(mappedBy = "metric", cascade = CascadeType.ALL)
-    private List<AnomalyFlagRecord> anomalies;
-
     public ProductivityMetricRecord() {}
 
-    public ProductivityMetricRecord(LocalDate date, Double hoursLogged,
-                                    Integer tasksCompleted, Integer meetingsAttended) {
-        this.date = date;
-        this.hoursLogged = hoursLogged;
-        this.tasksCompleted = tasksCompleted;
-        this.meetingsAttended = meetingsAttended;
+    public ProductivityMetricRecord(EmployeeProfile employeeProfile, Double score, LocalDate recordedDate) {
+        this.employeeProfile = employeeProfile;
+        this.score = score;
+        this.recordedDate = recordedDate;
     }
 
-    // getters and setters
+    @PrePersist
+    protected void onCreate() {
+        this.submittedAt = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public EmployeeProfile getEmployeeProfile() {
+        return employeeProfile;
+    }
+
+    public void setEmployeeProfile(EmployeeProfile employeeProfile) {
+        this.employeeProfile = employeeProfile;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public LocalDate getRecordedDate() {
+        return recordedDate;
+    }
+
+    public void setRecordedDate(LocalDate recordedDate) {
+        this.recordedDate = recordedDate;
+    }
+
+    public LocalDateTime getSubmittedAt() {
+        return submittedAt;
+    }
+
+    public void setSubmittedAt(LocalDateTime submittedAt) {
+        this.submittedAt = submittedAt;
+    }
 }

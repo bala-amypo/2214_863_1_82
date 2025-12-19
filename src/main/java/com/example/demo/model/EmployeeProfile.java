@@ -1,51 +1,90 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(
-    name = "employee_profiles",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = "employeeId"),
-        @UniqueConstraint(columnNames = "email")
-    }
-)
+@Table(name = "employee_profiles")
 public class EmployeeProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String employeeId;
-    private String fullName;
+    @NotNull
+    @Column(nullable = false)
+    private String name;
+
+    @NotNull
+    @Column(nullable = false, unique = true)
     private String email;
-    private String teamName;
+
     private String role;
-    private Boolean active;
+
+    private String department;
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    private List<ProductivityMetricRecord> metrics;
-
     public EmployeeProfile() {}
 
-    public EmployeeProfile(String employeeId, String fullName, String email,
-                           String teamName, String role, Boolean active) {
-        this.employeeId = employeeId;
-        this.fullName = fullName;
+    public EmployeeProfile(String name, String email, String role, String department) {
+        this.name = name;
         this.email = email;
-        this.teamName = teamName;
         this.role = role;
-        this.active = active;
+        this.department = department;
     }
 
     @PrePersist
-    void onCreate() {
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    // getters and setters (ALL fields)
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
