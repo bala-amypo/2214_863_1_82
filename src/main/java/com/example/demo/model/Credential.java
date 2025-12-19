@@ -1,7 +1,7 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "credentials")
@@ -11,26 +11,56 @@ public class Credential {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long employeeId;
-    private String credentialId;
-    private String issuer;
-    private LocalDateTime issuedAt;
-    private LocalDateTime expiresAt;
-    private String status;
+    @ManyToOne
+    @JoinColumn(name = "employee_profile_id", nullable = false)
+    @NotNull
+    private EmployeeProfile employeeProfile;
 
-    @Column(columnDefinition = "TEXT")
-    private String metadataJson;
+    @NotNull
+    @Column(nullable = false)
+    private String type;
 
-    public Credential() {
+    @NotNull
+    @Column(name = "credential_value", nullable = false)
+    private String value;
+
+    public Credential() {}
+
+    public Credential(EmployeeProfile employeeProfile, String type, String value) {
+        this.employeeProfile = employeeProfile;
+        this.type = type;
+        this.value = value;
     }
 
-    public Credential(Long employeeId, String credentialId, String issuer) {
-        this.employeeId = employeeId;
-        this.credentialId = credentialId;
-        this.issuer = issuer;
-        this.status = "PENDING";
-        this.issuedAt = LocalDateTime.now();
+    public Long getId() {
+        return id;
     }
 
-    // getters and setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public EmployeeProfile getEmployeeProfile() {
+        return employeeProfile;
+    }
+
+    public void setEmployeeProfile(EmployeeProfile employeeProfile) {
+        this.employeeProfile = employeeProfile;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }
