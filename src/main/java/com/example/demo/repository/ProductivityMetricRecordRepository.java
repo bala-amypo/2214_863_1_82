@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductivityMetricRecordRepository extends JpaRepository<ProductivityMetricRecord, Long> {
-    List<ProductivityMetricRecord> findByEmployeeProfileId(Long employeeId);
-    List<ProductivityMetricRecord> findByEmployeeId(Long employeeId);
+public interface ProductivityMetricRecordRepository
+        extends JpaRepository<ProductivityMetricRecord, Long> {
+
+    // CORRECT: navigate employeeProfile → id
+    List<ProductivityMetricRecord> findByEmployeeProfile_Id(Long employeeProfileId);
 }
