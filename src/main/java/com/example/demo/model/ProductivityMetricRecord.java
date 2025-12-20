@@ -30,7 +30,9 @@ public class ProductivityMetricRecord {
 
     public ProductivityMetricRecord() {}
 
-    public ProductivityMetricRecord(EmployeeProfile employeeProfile, Double score, LocalDate recordedDate) {
+    public ProductivityMetricRecord(EmployeeProfile employeeProfile,
+                                     Double score,
+                                     LocalDate recordedDate) {
         this.employeeProfile = employeeProfile;
         this.score = score;
         this.recordedDate = recordedDate;
@@ -40,8 +42,6 @@ public class ProductivityMetricRecord {
     protected void onCreate() {
         this.submittedAt = LocalDateTime.now();
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -81,3 +81,5 @@ public class ProductivityMetricRecord {
 
     public void setSubmittedAt(LocalDateTime submittedAt) {
         this.submittedAt = submittedAt;
+    }
+}
