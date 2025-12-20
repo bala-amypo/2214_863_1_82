@@ -13,9 +13,7 @@ public class ProductivityMetricRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long employeeId;
-
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "employee_profile_id", nullable = false)
     @NotNull
     private EmployeeProfile employeeProfile;
@@ -36,18 +34,14 @@ public class ProductivityMetricRecord {
         this.employeeProfile = employeeProfile;
         this.score = score;
         this.recordedDate = recordedDate;
-        if (employeeProfile != null) {
-            this.employeeId = employeeProfile.getId();
-        }
     }
 
     @PrePersist
     protected void onCreate() {
         this.submittedAt = LocalDateTime.now();
-        if (this.employeeProfile != null && this.employeeId == null) {
-            this.employeeId = this.employeeProfile.getId();
-        }
     }
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -57,23 +51,12 @@ public class ProductivityMetricRecord {
         this.id = id;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
-
     public EmployeeProfile getEmployeeProfile() {
         return employeeProfile;
     }
 
     public void setEmployeeProfile(EmployeeProfile employeeProfile) {
         this.employeeProfile = employeeProfile;
-        if (employeeProfile != null) {
-            this.employeeId = employeeProfile.getId();
-        }
     }
 
     public Double getScore() {
@@ -98,5 +81,3 @@ public class ProductivityMetricRecord {
 
     public void setSubmittedAt(LocalDateTime submittedAt) {
         this.submittedAt = submittedAt;
-    }
-}
