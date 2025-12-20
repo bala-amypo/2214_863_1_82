@@ -12,6 +12,9 @@ public class EmployeeProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String employeeId;
+
     @NotNull
     @Column(nullable = false)
     private String name;
@@ -21,9 +24,7 @@ public class EmployeeProfile {
     private String email;
 
     private String role;
-
     private String department;
-
     private LocalDateTime createdAt;
 
     public EmployeeProfile() {}
@@ -46,6 +47,14 @@ public class EmployeeProfile {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
