@@ -22,4 +22,9 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return productivityMetricRecordRepository
                 .findByEmployeeProfile_Id(employeeId);
     }
+
+    @Override
+    public ProductivityMetricRecord submitMetric(ProductivityMetricRecord record) {
+        return productivityMetricRecordRepository.save(record);
+    }
 }
