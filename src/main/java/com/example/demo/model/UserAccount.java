@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_accounts")
@@ -11,24 +11,19 @@ public class UserAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(nullable = false, unique = true)
     private String username;
 
-    @NotNull
-    @Column(nullable = false)
-    private String password;
+    @Column(unique = true)
+    private String email;
 
-    @NotNull
-    @Column(nullable = false)
+    private String passwordHash;
+
     private String role;
 
-    public UserAccount() {}
+    private LocalDateTime createdAt;
 
-    public UserAccount(String username, String password, String role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
+    public UserAccount() {
+        this.createdAt = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -47,12 +42,20 @@ public class UserAccount {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getRole() {
@@ -61,5 +64,13 @@ public class UserAccount {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

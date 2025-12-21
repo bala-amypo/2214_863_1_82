@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "anomaly_rules")
@@ -11,28 +10,18 @@ public class AnomalyRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(nullable = false)
-    private String metricName;
+    @Column(unique = true)
+    private String ruleCode;
 
-    @NotNull
-    @Column(nullable = false)
-    private Double threshold;
+    private String description;
 
-    @NotNull
-    @Column(nullable = false)
-    private String comparisonOperator;
+    private String thresholdType;
 
-    @Column(columnDefinition = "boolean default true")
+    private Double thresholdValue;
+
     private Boolean active = true;
 
-    public AnomalyRule() {}
-
-    public AnomalyRule(String metricName, Double threshold, String comparisonOperator) {
-        this.metricName = metricName;
-        this.threshold = threshold;
-        this.comparisonOperator = comparisonOperator;
-        this.active = true;
+    public AnomalyRule() {
     }
 
     public Long getId() {
@@ -43,28 +32,36 @@ public class AnomalyRule {
         this.id = id;
     }
 
-    public String getMetricName() {
-        return metricName;
+    public String getRuleCode() {
+        return ruleCode;
     }
 
-    public void setMetricName(String metricName) {
-        this.metricName = metricName;
+    public void setRuleCode(String ruleCode) {
+        this.ruleCode = ruleCode;
     }
 
-    public Double getThreshold() {
-        return threshold;
+    public String getDescription() {
+        return description;
     }
 
-    public void setThreshold(Double threshold) {
-        this.threshold = threshold;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getComparisonOperator() {
-        return comparisonOperator;
+    public String getThresholdType() {
+        return thresholdType;
     }
 
-    public void setComparisonOperator(String comparisonOperator) {
-        this.comparisonOperator = comparisonOperator;
+    public void setThresholdType(String thresholdType) {
+        this.thresholdType = thresholdType;
+    }
+
+    public Double getThresholdValue() {
+        return thresholdValue;
+    }
+
+    public void setThresholdValue(Double thresholdValue) {
+        this.thresholdValue = thresholdValue;
     }
 
     public Boolean getActive() {

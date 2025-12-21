@@ -1,45 +1,36 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "productivity_metrics")
+@Table(name = "productivity_metric_records",
+       uniqueConstraints = @UniqueConstraint(columnNames = {"employeeId", "date"}))
 public class ProductivityMetricRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "employee_profile_id", nullable = false)
-    @NotNull
-    private EmployeeProfile employeeProfile;
+    private Long employeeId;
 
-    @NotNull
-    @Column(nullable = false)
-    private Double score;
+    private LocalDate date;
 
-    @NotNull
-    @Column(nullable = false)
-    private LocalDate recordedDate;
+    private Double hoursLogged;
+
+    private Integer tasksCompleted;
+
+    private Integer meetingsAttended;
+
+    private Double productivityScore;
+
+    @Column(columnDefinition = "TEXT")
+    private String rawDataJson;
 
     private LocalDateTime submittedAt;
 
-    public ProductivityMetricRecord() {}
-
-    public ProductivityMetricRecord(EmployeeProfile employeeProfile,
-                                     Double score,
-                                     LocalDate recordedDate) {
-        this.employeeProfile = employeeProfile;
-        this.score = score;
-        this.recordedDate = recordedDate;
-    }
-
-    @PrePersist
-    protected void onCreate() {
+    public ProductivityMetricRecord() {
         this.submittedAt = LocalDateTime.now();
     }
 
@@ -51,28 +42,60 @@ public class ProductivityMetricRecord {
         this.id = id;
     }
 
-    public EmployeeProfile getEmployeeProfile() {
-        return employeeProfile;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeProfile(EmployeeProfile employeeProfile) {
-        this.employeeProfile = employeeProfile;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public Double getScore() {
-        return score;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setScore(Double score) {
-        this.score = score;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public LocalDate getRecordedDate() {
-        return recordedDate;
+    public Double getHoursLogged() {
+        return hoursLogged;
     }
 
-    public void setRecordedDate(LocalDate recordedDate) {
-        this.recordedDate = recordedDate;
+    public void setHoursLogged(Double hoursLogged) {
+        this.hoursLogged = hoursLogged;
+    }
+
+    public Integer getTasksCompleted() {
+        return tasksCompleted;
+    }
+
+    public void setTasksCompleted(Integer tasksCompleted) {
+        this.tasksCompleted = tasksCompleted;
+    }
+
+    public Integer getMeetingsAttended() {
+        return meetingsAttended;
+    }
+
+    public void setMeetingsAttended(Integer meetingsAttended) {
+        this.meetingsAttended = meetingsAttended;
+    }
+
+    public Double getProductivityScore() {
+        return productivityScore;
+    }
+
+    public void setProductivityScore(Double productivityScore) {
+        this.productivityScore = productivityScore;
+    }
+
+    public String getRawDataJson() {
+        return rawDataJson;
+    }
+
+    public void setRawDataJson(String rawDataJson) {
+        this.rawDataJson = rawDataJson;
     }
 
     public LocalDateTime getSubmittedAt() {

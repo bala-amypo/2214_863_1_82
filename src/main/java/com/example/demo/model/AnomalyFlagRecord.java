@@ -1,47 +1,32 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "anomaly_flags")
+@Table(name = "anomaly_flag_records")
 public class AnomalyFlagRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_profile_id", nullable = false)
-    @NotNull
-    private EmployeeProfile employeeProfile;
+    private Long employeeId;
 
-    @ManyToOne
-    @JoinColumn(name = "anomaly_rule_id", nullable = false)
-    @NotNull
-    private AnomalyRule anomalyRule;
+    private Long metricId;
 
-    @NotNull
-    @Column(nullable = false)
-    private Double flaggedValue;
+    private String ruleCode;
 
-    @Column(columnDefinition = "boolean default false")
+    private String severity;
+
+    @Column(columnDefinition = "TEXT")
+    private String details;
+
     private Boolean resolved = false;
 
     private LocalDateTime flaggedAt;
 
-    public AnomalyFlagRecord() {}
-
-    public AnomalyFlagRecord(EmployeeProfile employeeProfile, AnomalyRule anomalyRule, Double flaggedValue) {
-        this.employeeProfile = employeeProfile;
-        this.anomalyRule = anomalyRule;
-        this.flaggedValue = flaggedValue;
-        this.resolved = false;
-    }
-
-    @PrePersist
-    protected void onCreate() {
+    public AnomalyFlagRecord() {
         this.flaggedAt = LocalDateTime.now();
     }
 
@@ -53,28 +38,44 @@ public class AnomalyFlagRecord {
         this.id = id;
     }
 
-    public EmployeeProfile getEmployeeProfile() {
-        return employeeProfile;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeProfile(EmployeeProfile employeeProfile) {
-        this.employeeProfile = employeeProfile;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public AnomalyRule getAnomalyRule() {
-        return anomalyRule;
+    public Long getMetricId() {
+        return metricId;
     }
 
-    public void setAnomalyRule(AnomalyRule anomalyRule) {
-        this.anomalyRule = anomalyRule;
+    public void setMetricId(Long metricId) {
+        this.metricId = metricId;
     }
 
-    public Double getFlaggedValue() {
-        return flaggedValue;
+    public String getRuleCode() {
+        return ruleCode;
     }
 
-    public void setFlaggedValue(Double flaggedValue) {
-        this.flaggedValue = flaggedValue;
+    public void setRuleCode(String ruleCode) {
+        this.ruleCode = ruleCode;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     public Boolean getResolved() {
