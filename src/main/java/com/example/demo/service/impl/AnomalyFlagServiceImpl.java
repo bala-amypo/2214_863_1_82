@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.AnomalyFlagRecord;
-import com.example.demo.repository.AnomalyFlagRepository;
+import com.example.demo.repository.AnomalyFlagRecordRepository;
 import com.example.demo.service.AnomalyFlagService;
 import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,14 +11,14 @@ import java.util.List;
 @Service
 public class AnomalyFlagServiceImpl implements AnomalyFlagService {
 
-    private final AnomalyFlagRepository repository;
+    private final AnomalyFlagRecordRepository repository;
 
-    public AnomalyFlagServiceImpl(AnomalyFlagRepository repository) {
+    public AnomalyFlagServiceImpl(AnomalyFlagRecordRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public AnomalyFlagRecord create(AnomalyFlagRecord record) {
+    public AnomalyFlagRecord flagAnomaly(AnomalyFlagRecord record) {
         record.setResolved(false);
         return repository.save(record);
     }
@@ -42,7 +42,7 @@ public class AnomalyFlagServiceImpl implements AnomalyFlagService {
     }
 
     @Override
-    public List<AnomalyFlagRecord> getAll() {
+    public List<AnomalyFlagRecord> getAllFlags() {
         return repository.findAll();
     }
 }

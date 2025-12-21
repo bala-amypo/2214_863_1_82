@@ -1,9 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.ProductivityMetricRecord;
-import com.example.demo.repository.ProductivityMetricRepository;
+import com.example.demo.repository.ProductivityMetricRecordRepository;
 import com.example.demo.service.ProductivityMetricService;
-import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +11,9 @@ import java.util.Optional;
 @Service
 public class ProductivityMetricServiceImpl implements ProductivityMetricService {
 
-    private final ProductivityMetricRepository repository;
+    private final ProductivityMetricRecordRepository repository;
 
-    public ProductivityMetricServiceImpl(ProductivityMetricRepository repository) {
+    public ProductivityMetricServiceImpl(ProductivityMetricRecordRepository repository) {
         this.repository = repository;
     }
 
