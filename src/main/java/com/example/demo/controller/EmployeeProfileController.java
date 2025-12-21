@@ -17,17 +17,30 @@ public class EmployeeProfileController {
     }
 
     @PostMapping
-    public EmployeeProfile createEmployee(@RequestBody EmployeeProfile employee) {
-        return service.createEmployee(employee);
-    }
-
-    @GetMapping
-    public List<EmployeeProfile> getAllEmployees() {
-        return service.getAllEmployees();
+    public EmployeeProfile create(@RequestBody EmployeeProfile emp) {
+        return service.createEmployee(emp);
     }
 
     @GetMapping("/{id}")
-    public EmployeeProfile getEmployeeById(@PathVariable Long id) {
+    public EmployeeProfile getById(@PathVariable Long id) {
         return service.getEmployeeById(id);
+    }
+
+    @GetMapping
+    public List<EmployeeProfile> getAll() {
+        return service.getAllEmployees();
+    }
+
+    @PutMapping("/{id}/status")
+    public EmployeeProfile updateStatus(
+            @PathVariable Long id,
+            @RequestParam boolean active) {
+        return service.updateEmployeeStatus(id, active);
+    }
+
+    @GetMapping("/lookup/{employeeId}")
+    public EmployeeProfile lookup(@PathVariable String employeeId) {
+        return service.findByEmployeeId(employeeId)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
     }
 }
