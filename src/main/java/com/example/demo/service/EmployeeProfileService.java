@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.model.EmployeeProfile;
+
 import java.util.List;
 
-public interface EmployeeProfileService {
-    EmployeeProfile createEmployee(EmployeeProfile employeeProfile);
-    EmployeeProfile getEmployeeById(Long id);
-    List<EmployeeProfile> getAllEmployees();
-    EmployeeProfile findByEmployeeId(String employeeId);
+public interface EmployeeService {
+    EmployeeProfile create(EmployeeProfile employee);
+    EmployeeProfile getById(Long id);
+    List<EmployeeProfile> getAll();
 }

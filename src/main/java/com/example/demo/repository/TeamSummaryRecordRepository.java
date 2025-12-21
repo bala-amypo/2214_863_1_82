@@ -2,8 +2,12 @@ package com.example.demo.repository;
 
 import com.example.demo.model.TeamSummaryRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface TeamSummaryRecordRepository extends JpaRepository<TeamSummaryRecord, Long> {
+import java.time.LocalDate;
+import java.util.Optional;
+
+public interface TeamSummaryRecordRepository
+        extends JpaRepository<TeamSummaryRecord, Long> {
+
+    Optional<TeamSummaryRecord> findByTeamNameAndSummaryDate(String teamName, LocalDate summaryDate);
 }
