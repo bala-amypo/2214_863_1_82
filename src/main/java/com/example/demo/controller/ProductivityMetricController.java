@@ -1,16 +1,45 @@
-@GetMapping
-public List<ProductivityMetricRecord> getAll() {
-    return service.getAllMetrics();
-}
+package com.example.demo.controller;
 
-@GetMapping("/{id}")
-public ProductivityMetricRecord getById(@PathVariable Long id) {
-    return service.getMetricById(id).orElse(null);
-}
+import com.example.demo.model.ProductivityMetricRecord;
+import com.example.demo.service.ProductivityMetricService;
+import org.springframework.web.bind.annotation.*;
 
-@PutMapping("/{id}")
-public ProductivityMetricRecord update(
-        @PathVariable Long id,
-        @RequestBody ProductivityMetricRecord record) {
-    return record;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/metrics")
+public class ProductivityMetricController {
+
+    private final ProductivityMetricService service;
+
+    public ProductivityMetricController(ProductivityMetricService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public ProductivityMetricRecord create(
+            @RequestBody ProductivityMetricRecord record) {
+        return service.recordMetric(record);
+    }
+
+    @PutMapping("/{id}")
+    public ProductivityMetricRecord update(@PathVariable Long id,
+                                           @RequestBody ProductivityMetricRecord record) {
+        return record;
+    }
+
+    @GetMapping
+    public List<ProductivityMetricRecord> getAll() {
+        return service.getAllMetrics();
+    }
+
+    @GetMapping("/{id}")
+    public ProductivityMetricRecord getById(@PathVariable Long id) {
+        return service.getMetricById(id).orElse(null);
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public List<ProductivityMetricRecord> byEmployee(@PathVariable Long employeeId) {
+        return service.getMetricsByEmployee(employeeId);
+    }
 }
