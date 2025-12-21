@@ -16,11 +16,13 @@ public class AnomalyFlagServiceImpl implements AnomalyFlagService {
         this.repository = repository;
     }
 
-    public AnomalyFlagRecord create(AnomalyFlagRecord flag) {
+    @Override
+    public AnomalyFlagRecord flagAnomaly(AnomalyFlagRecord flag) {
         return repository.save(flag);
     }
 
-    public List<AnomalyFlagRecord> getUnresolved() {
-        return repository.findByResolvedFalse();
+    @Override
+    public List<AnomalyFlagRecord> getAllFlags() {
+        return repository.findAll();
     }
 }

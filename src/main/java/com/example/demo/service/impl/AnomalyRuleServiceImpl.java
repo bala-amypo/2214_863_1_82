@@ -16,10 +16,12 @@ public class AnomalyRuleServiceImpl implements AnomalyRuleService {
         this.repository = repository;
     }
 
-    public AnomalyRule create(AnomalyRule rule) {
+    @Override
+    public AnomalyRule createRule(AnomalyRule rule) {
         return repository.save(rule);
     }
 
+    @Override
     public List<AnomalyRule> getActiveRules() {
         return repository.findByActiveTrue();
     }

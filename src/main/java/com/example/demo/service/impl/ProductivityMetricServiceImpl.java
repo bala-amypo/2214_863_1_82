@@ -1,27 +1,28 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.ProductivityMetricRecord;
 import com.example.demo.repository.ProductivityMetricRecordRepository;
-import com.example.demo.service.ProductivityService;
+import com.example.demo.service.ProductivityMetricService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProductivityServiceImpl implements ProductivityService {
+public class ProductivityMetricServiceImpl implements ProductivityMetricService {
 
     private final ProductivityMetricRecordRepository repository;
 
-    public ProductivityServiceImpl(ProductivityMetricRecordRepository repository) {
+    public ProductivityMetricServiceImpl(ProductivityMetricRecordRepository repository) {
         this.repository = repository;
     }
 
-    public ProductivityMetricRecord submit(ProductivityMetricRecord record) {
-        return repository.save(record);
+    @Override
+    public ProductivityMetricRecord recordMetric(ProductivityMetricRecord metric) {
+        return repository.save(metric);
     }
 
-    public List<ProductivityMetricRecord> getByEmployee(Long employeeId) {
+    @Override
+    public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
         return repository.findByEmployeeId(employeeId);
     }
 }
