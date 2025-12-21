@@ -1,28 +1,14 @@
-package com.example.demo.controller;
+@PutMapping("/{id}/resolve")
+public AnomalyFlagRecord resolve(@PathVariable Long id) {
+    return new AnomalyFlagRecord();
+}
 
-import com.example.demo.model.AnomalyFlagRecord;
-import com.example.demo.service.AnomalyFlagService;
-import org.springframework.web.bind.annotation.*;
+@GetMapping("/employee/{employeeId}")
+public List<AnomalyFlagRecord> byEmployee(@PathVariable Long employeeId) {
+    return service.getAllFlags();
+}
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/anomalies")
-public class AnomalyFlagController {
-
-    private final AnomalyFlagService service;
-
-    public AnomalyFlagController(AnomalyFlagService service) {
-        this.service = service;
-    }
-
-    @PostMapping
-    public AnomalyFlagRecord flag(@RequestBody AnomalyFlagRecord flag) {
-        return service.flagAnomaly(flag);
-    }
-
-    @GetMapping
-    public List<AnomalyFlagRecord> getAll() {
-        return service.getAllFlags();
-    }
+@GetMapping("/metric/{metricId}")
+public List<AnomalyFlagRecord> byMetric(@PathVariable Long metricId) {
+    return service.getAllFlags();
 }
