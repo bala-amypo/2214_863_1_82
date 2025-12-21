@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.EmployeeProfile;
-import com.example.demo.service.EmployeeService;
+import com.example.demo.service.EmployeeProfileService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,24 +10,24 @@ import java.util.List;
 @RequestMapping("/api/employees")
 public class EmployeeProfileController {
 
-    private final EmployeeService employeeService;
+    private final EmployeeProfileService service;
 
-    public EmployeeProfileController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
+    public EmployeeProfileController(EmployeeProfileService service) {
+        this.service = service;
     }
 
     @PostMapping
     public EmployeeProfile createEmployee(@RequestBody EmployeeProfile employee) {
-        return employeeService.create(employee);
+        return service.createEmployee(employee);
     }
 
     @GetMapping
     public List<EmployeeProfile> getAllEmployees() {
-        return employeeService.getAll();
+        return service.getAllEmployees();
     }
 
     @GetMapping("/{id}")
     public EmployeeProfile getEmployeeById(@PathVariable Long id) {
-        return employeeService.getById(id);
+        return service.getEmployeeById(id);
     }
 }

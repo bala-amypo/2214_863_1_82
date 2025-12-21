@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ProductivityMetricRecord;
-import com.example.demo.service.ProductivityService;
+import com.example.demo.service.ProductivityMetricService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,20 +10,21 @@ import java.util.List;
 @RequestMapping("/api/metrics")
 public class ProductivityMetricController {
 
-    private final ProductivityService productivityService;
+    private final ProductivityMetricService service;
 
-    public ProductivityMetricController(ProductivityService productivityService) {
-        this.productivityService = productivityService;
+    public ProductivityMetricController(ProductivityMetricService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ProductivityMetricRecord submitMetric(@RequestBody ProductivityMetricRecord record) {
-        return productivityService.submit(record);
+    public ProductivityMetricRecord recordMetric(
+            @RequestBody ProductivityMetricRecord record) {
+        return service.recordMetric(record);
     }
 
     @GetMapping("/employee/{employeeId}")
-    public List<ProductivityMetricRecord> getMetricsByEmployee(
+    public List<ProductivityMetricRecord> getByEmployee(
             @PathVariable Long employeeId) {
-        return productivityService.getByEmployee(employeeId);
+        return service.getMetricsByEmployee(employeeId);
     }
 }

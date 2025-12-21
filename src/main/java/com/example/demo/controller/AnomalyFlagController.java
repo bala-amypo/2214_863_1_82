@@ -10,19 +10,19 @@ import java.util.List;
 @RequestMapping("/api/anomalies")
 public class AnomalyFlagController {
 
-    private final AnomalyFlagService anomalyFlagService;
+    private final AnomalyFlagService service;
 
-    public AnomalyFlagController(AnomalyFlagService anomalyFlagService) {
-        this.anomalyFlagService = anomalyFlagService;
+    public AnomalyFlagController(AnomalyFlagService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public AnomalyFlagRecord createFlag(@RequestBody AnomalyFlagRecord flag) {
-        return anomalyFlagService.create(flag);
+    public AnomalyFlagRecord flag(@RequestBody AnomalyFlagRecord flag) {
+        return service.flagAnomaly(flag);
     }
 
-    @GetMapping("/unresolved")
-    public List<AnomalyFlagRecord> getUnresolvedFlags() {
-        return anomalyFlagService.getUnresolved();
+    @GetMapping
+    public List<AnomalyFlagRecord> getAll() {
+        return service.getAllFlags();
     }
 }

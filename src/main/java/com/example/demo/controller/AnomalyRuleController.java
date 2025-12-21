@@ -10,19 +10,19 @@ import java.util.List;
 @RequestMapping("/api/anomaly-rules")
 public class AnomalyRuleController {
 
-    private final AnomalyRuleService anomalyRuleService;
+    private final AnomalyRuleService service;
 
-    public AnomalyRuleController(AnomalyRuleService anomalyRuleService) {
-        this.anomalyRuleService = anomalyRuleService;
+    public AnomalyRuleController(AnomalyRuleService service) {
+        this.service = service;
     }
 
     @PostMapping
     public AnomalyRule createRule(@RequestBody AnomalyRule rule) {
-        return anomalyRuleService.create(rule);
+        return service.createRule(rule);
     }
 
     @GetMapping("/active")
     public List<AnomalyRule> getActiveRules() {
-        return anomalyRuleService.getActiveRules();
+        return service.getActiveRules();
     }
 }

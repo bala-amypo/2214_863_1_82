@@ -10,19 +10,20 @@ import java.util.List;
 @RequestMapping("/api/team-summaries")
 public class TeamSummaryController {
 
-    private final TeamSummaryService teamSummaryService;
+    private final TeamSummaryService service;
 
-    public TeamSummaryController(TeamSummaryService teamSummaryService) {
-        this.teamSummaryService = teamSummaryService;
+    public TeamSummaryController(TeamSummaryService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public TeamSummaryRecord createSummary(@RequestBody TeamSummaryRecord summary) {
-        return teamSummaryService.create(summary);
+    public TeamSummaryRecord createSummary(
+            @RequestBody TeamSummaryRecord summary) {
+        return service.createSummary(summary);
     }
 
     @GetMapping
     public List<TeamSummaryRecord> getAllSummaries() {
-        return teamSummaryService.getAll();
+        return service.getAllSummaries();
     }
 }
