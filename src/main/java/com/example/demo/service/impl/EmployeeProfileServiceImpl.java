@@ -1,40 +1,32 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.EmployeeProfile;
 import com.example.demo.repository.EmployeeProfileRepository;
-import com.example.demo.service.EmployeeProfileService;
-import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.service.EmployeeService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
-public class EmployeeProfileServiceImpl implements EmployeeProfileService {
+public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeProfileRepository employeeProfileRepository;
+    private final EmployeeProfileRepository repository;
 
-    public EmployeeProfileServiceImpl(EmployeeProfileRepository employeeProfileRepository) {
-        this.employeeProfileRepository = employeeProfileRepository;
+    public EmployeeServiceImpl(EmployeeProfileRepository repository) {
+        this.repository = repository;
     }
 
-    @Override
-    public EmployeeProfile createEmployee(EmployeeProfile employeeProfile) {
-        return employeeProfileRepository.save(employeeProfile);
+    public EmployeeProfile create(EmployeeProfile employee) {
+        return repository.save(employee);
     }
 
-    @Override
-    public EmployeeProfile getEmployeeById(Long id) {
-        return employeeProfileRepository.findById(id)
+    public EmployeeProfile getById(Long id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
     }
 
-    @Override
-    public List<EmployeeProfile> getAllEmployees() {
-        return employeeProfileRepository.findAll();
-    }
-
-    @Override
-    public EmployeeProfile findByEmployeeId(String employeeId) {
-        return employeeProfileRepository.findByEmployeeId(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+    public List<EmployeeProfile> getAll() {
+        return repository.findAll();
     }
 }

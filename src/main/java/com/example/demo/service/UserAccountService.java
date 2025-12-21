@@ -2,7 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.model.UserAccount;
 
-public interface UserAccountService {
-    UserAccount createUser(UserAccount user);
-    UserAccount findByUsername(String username);
+import java.util.List;
+
+public interface UserService {
+    UserAccount register(UserAccount user);
+    List<UserAccount> getAll();
 }

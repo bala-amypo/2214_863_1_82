@@ -2,41 +2,25 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.AnomalyFlagRecord;
 import com.example.demo.repository.AnomalyFlagRecordRepository;
-import com.example.demo.repository.EmployeeProfileRepository;
-import com.example.demo.repository.AnomalyRuleRepository;
 import com.example.demo.service.AnomalyFlagService;
-import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class AnomalyFlagServiceImpl implements AnomalyFlagService {
 
-    private final AnomalyFlagRecordRepository anomalyFlagRecordRepository;
-    private final EmployeeProfileRepository employeeProfileRepository;
-    private final AnomalyRuleRepository anomalyRuleRepository;
+    private final AnomalyFlagRecordRepository repository;
 
-    public AnomalyFlagServiceImpl(AnomalyFlagRecordRepository anomalyFlagRecordRepository,
-                                EmployeeProfileRepository employeeProfileRepository,
-                                AnomalyRuleRepository anomalyRuleRepository) {
-        this.anomalyFlagRecordRepository = anomalyFlagRecordRepository;
-        this.employeeProfileRepository = employeeProfileRepository;
-        this.anomalyRuleRepository = anomalyRuleRepository;
+    public AnomalyFlagServiceImpl(AnomalyFlagRecordRepository repository) {
+        this.repository = repository;
     }
 
-    @Override
-    public AnomalyFlagRecord flagAnomaly(AnomalyFlagRecord record) {
-        if (!employeeProfileRepository.existsById(record.getEmployeeProfile().getId())) {
-            throw new ResourceNotFoundException("Employee not found");
-        }
-        if (!anomalyRuleRepository.existsById(record.getAnomalyRule().getId())) {
-            throw new ResourceNotFoundException("Rule not found");
-        }
-        return anomalyFlagRecordRepository.save(record);
+    public AnomalyFlagRecord create(AnomalyFlagRecord flag) {
+        return repository.save(flag);
     }
 
-    @Override
-    public List<AnomalyFlagRecord> getUnresolvedFlags() {
-        return anomalyFlagRecordRepository.findByResolvedFalse();
+    public List<AnomalyFlagRecord> getUnresolved() {
+        return repository.findByResolvedFalse();
     }
 }
