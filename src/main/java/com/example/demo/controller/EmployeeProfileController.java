@@ -8,26 +8,26 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
-public class EmployeeController {
+public class EmployeeProfileController {
 
-    private final EmployeeService service;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeService service) {
-        this.service = service;
+    public EmployeeProfileController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @PostMapping
-    public EmployeeProfile create(@RequestBody EmployeeProfile employee) {
-        return service.create(employee);
+    public EmployeeProfile createEmployee(@RequestBody EmployeeProfile employee) {
+        return employeeService.create(employee);
     }
 
     @GetMapping
-    public List<EmployeeProfile> getAll() {
-        return service.getAll();
+    public List<EmployeeProfile> getAllEmployees() {
+        return employeeService.getAll();
     }
 
     @GetMapping("/{id}")
-    public EmployeeProfile getById(@PathVariable Long id) {
-        return service.getById(id);
+    public EmployeeProfile getEmployeeById(@PathVariable Long id) {
+        return employeeService.getById(id);
     }
 }
