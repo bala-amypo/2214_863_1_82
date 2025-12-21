@@ -7,5 +7,9 @@ public interface AnomalyRuleService {
 
     AnomalyRule createRule(AnomalyRule rule);
 
+    AnomalyRule updateRule(Long id, AnomalyRule rule);
+
     List<AnomalyRule> getActiveRules();
+
+    List<AnomalyRule> getAllRules();
 }
