@@ -13,34 +13,51 @@ import com.example.demo.util.ProductivityCalculator;
 @Transactional
 public class ProductivityMetricServiceImpl implements ProductivityMetricService {
 
-    private final ProductivityMetricRecordRepository productivityMetricRecordRepository;
+    private final ProductivityMetricRecordRepository repository;
 
     public ProductivityMetricServiceImpl(
-            ProductivityMetricRecordRepository productivityMetricRecordRepository) {
-        this.productivityMetricRecordRepository = productivityMetricRecordRepository;
+            ProductivityMetricRecordRepository repository) {
+        this.repository = repository;
     }
 
+    // ✅ POST LOGIC
     @Override
-    public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
+    public ProductivityMetricRecord createMetric(ProductivityMetricRecord metric) {
 
-        // 1️⃣ LOAD EXISTING RECORD
+        // prevent duplicate metric for same day
+        repository.findByEmployeeIdAndDate(
+                metric.getEmployeeId(), metric.getDate()
+        ).ifPresent(m -> {
+            throw new IllegalStateException(
+                    "Metric already exists for this employee and date");
+        });
+
+        // calculate score (ignore input score)
+        Double score = ProductivityCalculator.computeScore(metric);
+        metric.setProductivityScore(score);
+
+        return repository.save(metric);
+    }
+
+    // ✅ PUT LOGIC
+    @Override
+    public ProductivityMetricRecord updateMetric(
+            Long id, ProductivityMetricRecord updated) {
+
         ProductivityMetricRecord existing =
-                productivityMetricRecordRepository.findById(id)
+                repository.findById(id)
                         .orElseThrow(() ->
                                 new ResourceNotFoundException("Metric not found"));
 
-        // 2️⃣ UPDATE FIELDS (ID & submittedAt stay untouched)
         existing.setDate(updated.getDate());
         existing.setHoursLogged(updated.getHoursLogged());
         existing.setTasksCompleted(updated.getTasksCompleted());
         existing.setMeetingsAttended(updated.getMeetingsAttended());
         existing.setRawDataJson(updated.getRawDataJson());
 
-        // 3️⃣ RECALCULATE SCORE (ignore request score)
         Double score = ProductivityCalculator.computeScore(existing);
         existing.setProductivityScore(score);
 
-        // 4️⃣ SAVE AND RETURN
-        return productivityMetricRecordRepository.save(existing);
+        return repository.save(existing);
     }
 }
