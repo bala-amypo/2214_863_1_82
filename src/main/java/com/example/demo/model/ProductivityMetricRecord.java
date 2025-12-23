@@ -5,34 +5,40 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "productivity_metric_records",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"employeeId", "date"}))
+@Table(
+    name = "productivity_metric_records",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"employee_id", "date"})
+)
 public class ProductivityMetricRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
+    @Column(nullable = false)
     private LocalDate date;
 
     private Double hoursLogged;
-
     private Integer tasksCompleted;
-
     private Integer meetingsAttended;
-
     private Double productivityScore;
 
     @Column(columnDefinition = "TEXT")
     private String rawDataJson;
 
+    @Column(nullable = false)
     private LocalDateTime submittedAt;
 
-    public ProductivityMetricRecord() {
+    // ✅ THIS IS THE KEY FIX
+    @PrePersist
+    public void onCreate() {
         this.submittedAt = LocalDateTime.now();
     }
+
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;
