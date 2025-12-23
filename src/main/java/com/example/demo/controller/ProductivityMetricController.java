@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.ProductivityMetricRecord;
@@ -16,7 +18,7 @@ public class ProductivityMetricController {
         this.service = service;
     }
 
-    // ✅ POST /api/metrics
+    // ===================== POST =====================
     @PostMapping
     public ProductivityMetricRecord createMetric(
             @RequestBody ProductivityMetricRecord metric) {
@@ -24,12 +26,18 @@ public class ProductivityMetricController {
         return service.createMetric(metric);
     }
 
-    // ✅ PUT /api/metrics/{id}
+    // ===================== PUT =====================
     @PutMapping("/{id}")
     public ProductivityMetricRecord updateMetric(
             @PathVariable Long id,
             @RequestBody ProductivityMetricRecord metric) {
 
         return service.updateMetric(id, metric);
+    }
+
+    // ===================== GET ALL =====================
+    @GetMapping
+    public List<ProductivityMetricRecord> getAllMetrics() {
+        return service.getAllMetrics();
     }
 }

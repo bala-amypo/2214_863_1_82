@@ -1,5 +1,7 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,29 +22,29 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         this.repository = repository;
     }
 
-    // ✅ POST LOGIC
+    // ===================== POST =====================
     @Override
     public ProductivityMetricRecord createMetric(ProductivityMetricRecord metric) {
 
-        // prevent duplicate metric for same day
         repository.findByEmployeeIdAndDate(
-                metric.getEmployeeId(), metric.getDate()
+                metric.getEmployeeId(),
+                metric.getDate()
         ).ifPresent(m -> {
             throw new IllegalStateException(
                     "Metric already exists for this employee and date");
         });
 
-        // calculate score (ignore input score)
         Double score = ProductivityCalculator.computeScore(metric);
         metric.setProductivityScore(score);
 
         return repository.save(metric);
     }
 
-    // ✅ PUT LOGIC
+    // ===================== PUT =====================
     @Override
     public ProductivityMetricRecord updateMetric(
-            Long id, ProductivityMetricRecord updated) {
+            Long id,
+            ProductivityMetricRecord updated) {
 
         ProductivityMetricRecord existing =
                 repository.findById(id)
@@ -59,5 +61,11 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         existing.setProductivityScore(score);
 
         return repository.save(existing);
+    }
+
+    // ===================== GET ALL =====================
+    @Override
+    public List<ProductivityMetricRecord> getAllMetrics() {
+        return repository.findAll();
     }
 }
