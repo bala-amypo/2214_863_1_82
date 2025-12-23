@@ -5,110 +5,63 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-    name = "productivity_metric_records",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"employee_id", "date"})
-)
+@Table(name = "productivity_metric_records")
 public class ProductivityMetricRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
-    @Column(nullable = false)
     private LocalDate date;
 
     private Double hoursLogged;
+
     private Integer tasksCompleted;
+
     private Integer meetingsAttended;
+
     private Double productivityScore;
 
     @Column(columnDefinition = "TEXT")
     private String rawDataJson;
 
-    @Column(nullable = false)
     private LocalDateTime submittedAt;
 
-    // ✅ THIS IS THE KEY FIX
+    public ProductivityMetricRecord() {}
+
     @PrePersist
     public void onCreate() {
         this.submittedAt = LocalDateTime.now();
     }
 
-    // ===== Getters & Setters =====
+    // getters and setters
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getEmployeeId() { return employeeId; }
+    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
 
-    public Long getEmployeeId() {
-        return employeeId;
-    }
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
+    public Double getHoursLogged() { return hoursLogged; }
+    public void setHoursLogged(Double hoursLogged) { this.hoursLogged = hoursLogged; }
 
-    public LocalDate getDate() {
-        return date;
-    }
+    public Integer getTasksCompleted() { return tasksCompleted; }
+    public void setTasksCompleted(Integer tasksCompleted) { this.tasksCompleted = tasksCompleted; }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+    public Integer getMeetingsAttended() { return meetingsAttended; }
+    public void setMeetingsAttended(Integer meetingsAttended) { this.meetingsAttended = meetingsAttended; }
 
-    public Double getHoursLogged() {
-        return hoursLogged;
-    }
+    public Double getProductivityScore() { return productivityScore; }
+    public void setProductivityScore(Double productivityScore) { this.productivityScore = productivityScore; }
 
-    public void setHoursLogged(Double hoursLogged) {
-        this.hoursLogged = hoursLogged;
-    }
+    public String getRawDataJson() { return rawDataJson; }
+    public void setRawDataJson(String rawDataJson) { this.rawDataJson = rawDataJson; }
 
-    public Integer getTasksCompleted() {
-        return tasksCompleted;
-    }
-
-    public void setTasksCompleted(Integer tasksCompleted) {
-        this.tasksCompleted = tasksCompleted;
-    }
-
-    public Integer getMeetingsAttended() {
-        return meetingsAttended;
-    }
-
-    public void setMeetingsAttended(Integer meetingsAttended) {
-        this.meetingsAttended = meetingsAttended;
-    }
-
-    public Double getProductivityScore() {
-        return productivityScore;
-    }
-
-    public void setProductivityScore(Double productivityScore) {
-        this.productivityScore = productivityScore;
-    }
-
-    public String getRawDataJson() {
-        return rawDataJson;
-    }
-
-    public void setRawDataJson(String rawDataJson) {
-        this.rawDataJson = rawDataJson;
-    }
-
-    public LocalDateTime getSubmittedAt() {
-        return submittedAt;
-    }
-
-    public void setSubmittedAt(LocalDateTime submittedAt) {
-        this.submittedAt = submittedAt;
-    }
+    public LocalDateTime getSubmittedAt() { return submittedAt; }
+    public void setSubmittedAt(LocalDateTime submittedAt) { this.submittedAt = submittedAt; }
 }

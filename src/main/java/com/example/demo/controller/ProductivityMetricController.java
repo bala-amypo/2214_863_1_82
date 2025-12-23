@@ -1,45 +1,25 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.ProductivityMetricRecord;
-import com.example.demo.service.ProductivityMetricService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.example.demo.model.ProductivityMetricRecord;
+import com.example.demo.service.ProductivityMetricService;
 
 @RestController
 @RequestMapping("/api/metrics")
 public class ProductivityMetricController {
 
-    private final ProductivityMetricService service;
+    private final ProductivityMetricService productivityMetricService;
 
-    public ProductivityMetricController(ProductivityMetricService service) {
-        this.service = service;
-    }
-
-    @PostMapping
-    public ProductivityMetricRecord create(
-            @RequestBody ProductivityMetricRecord record) {
-        return service.recordMetric(record);
+    public ProductivityMetricController(ProductivityMetricService productivityMetricService) {
+        this.productivityMetricService = productivityMetricService;
     }
 
     @PutMapping("/{id}")
-    public ProductivityMetricRecord update(@PathVariable Long id,
-                                           @RequestBody ProductivityMetricRecord record) {
-        return record;
-    }
+    public ProductivityMetricRecord updateMetric(
+            @PathVariable Long id,
+            @RequestBody ProductivityMetricRecord metric) {
 
-    @GetMapping
-    public List<ProductivityMetricRecord> getAll() {
-        return service.getAllMetrics();
-    }
-
-    @GetMapping("/{id}")
-    public ProductivityMetricRecord getById(@PathVariable Long id) {
-        return service.getMetricById(id).orElse(null);
-    }
-
-    @GetMapping("/employee/{employeeId}")
-    public List<ProductivityMetricRecord> byEmployee(@PathVariable Long employeeId) {
-        return service.getMetricsByEmployee(employeeId);
+        return productivityMetricService.updateMetric(id, metric);
     }
 }
