@@ -22,7 +22,7 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         this.repository = repository;
     }
 
-    // ===================== POST =====================
+    // ================= POST =================
     @Override
     public ProductivityMetricRecord createMetric(ProductivityMetricRecord metric) {
 
@@ -40,7 +40,7 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return repository.save(metric);
     }
 
-    // ===================== PUT =====================
+    // ================= PUT =================
     @Override
     public ProductivityMetricRecord updateMetric(
             Long id,
@@ -63,9 +63,23 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return repository.save(existing);
     }
 
-    // ===================== GET ALL =====================
+    // ================= GET ALL =================
     @Override
     public List<ProductivityMetricRecord> getAllMetrics() {
         return repository.findAll();
+    }
+
+    // ================= GET BY ID =================
+    @Override
+    public ProductivityMetricRecord getMetricById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Metric not found"));
+    }
+
+    // ================= GET BY EMPLOYEE (FIX) =================
+    @Override
+    public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
+        return repository.findByEmployeeId(employeeId);
     }
 }

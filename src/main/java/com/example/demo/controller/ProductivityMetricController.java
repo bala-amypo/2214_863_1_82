@@ -18,7 +18,7 @@ public class ProductivityMetricController {
         this.service = service;
     }
 
-    // ===================== POST =====================
+    // ============== POST =================
     @PostMapping
     public ProductivityMetricRecord createMetric(
             @RequestBody ProductivityMetricRecord metric) {
@@ -26,7 +26,7 @@ public class ProductivityMetricController {
         return service.createMetric(metric);
     }
 
-    // ===================== PUT =====================
+    // ============== PUT =================
     @PutMapping("/{id}")
     public ProductivityMetricRecord updateMetric(
             @PathVariable Long id,
@@ -35,9 +35,25 @@ public class ProductivityMetricController {
         return service.updateMetric(id, metric);
     }
 
-    // ===================== GET ALL =====================
+    // ============== GET ALL =================
     @GetMapping
     public List<ProductivityMetricRecord> getAllMetrics() {
         return service.getAllMetrics();
+    }
+
+    // ============== GET BY ID =================
+    @GetMapping("/{id}")
+    public ProductivityMetricRecord getMetricById(
+            @PathVariable Long id) {
+
+        return service.getMetricById(id);
+    }
+
+    // ============== GET BY EMPLOYEE (FIXES 500) =================
+    @GetMapping("/employee/{employeeId}")
+    public List<ProductivityMetricRecord> getMetricsByEmployee(
+            @PathVariable Long employeeId) {
+
+        return service.getMetricsByEmployee(employeeId);
     }
 }

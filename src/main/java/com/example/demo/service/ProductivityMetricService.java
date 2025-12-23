@@ -12,6 +12,12 @@ public interface ProductivityMetricService {
     // PUT
     ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord metric);
 
-    // GET ALL  ✅ THIS FIXES YOUR 500
+    // GET ALL
     List<ProductivityMetricRecord> getAllMetrics();
+
+    // GET BY ID
+    ProductivityMetricRecord getMetricById(Long id);
+
+    // GET BY EMPLOYEE  ✅ FIXES YOUR CURRENT 500
+    List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId);
 }
