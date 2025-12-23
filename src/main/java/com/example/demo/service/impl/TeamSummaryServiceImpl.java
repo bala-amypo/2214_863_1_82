@@ -36,30 +36,29 @@ public class TeamSummaryServiceImpl implements TeamSummaryService {
     @Override
     public TeamSummaryRecord generateSummary(String teamName, LocalDate summaryDate) {
 
-        // 1️⃣ Get all metrics for the given date
         List<ProductivityMetricRecord> metrics =
                 productivityMetricRecordRepository.findAll()
                         .stream()
-                        .filter(m ->
-                                m.getDate().equals(summaryDate))
+                        .filter(m -> summaryDate.equals(m.getDate()))
                         .toList();
 
-        double avgHours = metrics.stream()
+        Double avgHours = metrics.stream()
                 .mapToDouble(ProductivityMetricRecord::getHoursLogged)
                 .average()
                 .orElse(0.0);
 
-        double avgTasks = metrics.stream()
+        Double avgTasks = metrics.stream()
                 .mapToInt(ProductivityMetricRecord::getTasksCompleted)
                 .average()
                 .orElse(0.0);
 
-        double avgScore = metrics.stream()
+        Double avgScore = metrics.stream()
                 .mapToDouble(ProductivityMetricRecord::getProductivityScore)
                 .average()
                 .orElse(0.0);
 
-        int anomalyCount = anomalyFlagRecordRepository.findAll().size();
+        Integer anomalyCount =
+                (int) anomalyFlagRecordRepository.findAll().stream().count();
 
         TeamSummaryRecord summary = new TeamSummaryRecord();
         summary.setTeamName(teamName);
