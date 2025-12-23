@@ -6,18 +6,13 @@ import com.example.demo.model.ProductivityMetricRecord;
 
 public interface ProductivityMetricService {
 
-    // POST
-    ProductivityMetricRecord createMetric(ProductivityMetricRecord metric);
+    ProductivityMetricRecord createMetric(ProductivityMetricRecord record);
 
-    // PUT
-    ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord metric);
+    ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord record);
 
-    // GET ALL
-    List<ProductivityMetricRecord> getAllMetrics();
-
-    // GET BY ID
     ProductivityMetricRecord getMetricById(Long id);
 
-    // GET BY EMPLOYEE  ✅ FIXES YOUR CURRENT 500
     List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId);
+
+    List<ProductivityMetricRecord> getAllMetrics();
 }

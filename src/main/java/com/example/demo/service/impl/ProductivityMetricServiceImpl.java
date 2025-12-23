@@ -29,7 +29,7 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
     }
 
     @Override
-    public ProductivityMetricRecord recordMetric(ProductivityMetricRecord metric) {
+    public ProductivityMetricRecord createMetric(ProductivityMetricRecord metric) {
 
         EmployeeProfile employee = employeeRepository
                 .findById(metric.getEmployeeId())
@@ -52,6 +52,24 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         metric.setSubmittedAt(LocalDateTime.now());
 
         return metricRepository.save(metric);
+    }
+
+    @Override
+    public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
+
+        ProductivityMetricRecord existing = metricRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Metric not found"));
+
+        existing.setDate(updated.getDate());
+        existing.setHoursLogged(updated.getHoursLogged());
+        existing.setTasksCompleted(updated.getTasksCompleted());
+        existing.setMeetingsAttended(updated.getMeetingsAttended());
+        existing.setRawDataJson(updated.getRawDataJson());
+
+        double score = ProductivityCalculator.computeScore(existing);
+        existing.setProductivityScore(score);
+
+        return metricRepository.save(existing);
     }
 
     @Override
