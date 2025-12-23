@@ -12,7 +12,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody Map<String, String> body) {
-        // body.get("email"), body.get("password") if needed
+        
         return ResponseEntity.ok("User registered successfully");
     }
 
