@@ -18,7 +18,7 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         this.repository = repository;
     }
 
-    // ✅ POST /api/metrics
+   
     @Override
     public ProductivityMetricRecord recordMetric(ProductivityMetricRecord record) {
 
@@ -28,7 +28,7 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return repository.save(record);
     }
 
-    // ✅ PUT /api/metrics/{id}
+    
     @Override
     public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
 
@@ -46,25 +46,25 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return repository.save(existing);
     }
 
-    // ✅ GET /api/metrics/employee/{employeeId}
+   
     @Override
     public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
         return repository.findByEmployeeId(employeeId);
     }
 
-    // ✅ GET /api/metrics
+   
     @Override
     public List<ProductivityMetricRecord> getAllMetrics() {
         return repository.findAll();
     }
 
-    // ✅ GET /api/metrics/{id}
+    
     @Override
     public Optional<ProductivityMetricRecord> getMetricById(Long id) {
         return repository.findById(id);
     }
 
-    // 🔹 Helper method (clean + reusable)
+    
     private void calculateScore(ProductivityMetricRecord record) {
         double score =
                 (record.getHoursLogged() * 10) +
