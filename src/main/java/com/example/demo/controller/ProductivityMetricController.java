@@ -19,7 +19,14 @@ public class ProductivityMetricController {
 
     @PostMapping
     public ProductivityMetricRecord create(@RequestBody ProductivityMetricRecord record) {
-        return service.recordMetric(record);
+        return service.createMetric(record);
+    }
+
+    @PutMapping("/{id}")
+    public ProductivityMetricRecord update(
+            @PathVariable Long id,
+            @RequestBody ProductivityMetricRecord record) {
+        return service.updateMetric(id, record);
     }
 
     @GetMapping("/{id}")
