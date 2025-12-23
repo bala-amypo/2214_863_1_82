@@ -1,39 +1,16 @@
-package com.example.demo.service.impl;
+@Override
+public ProductivityMetricRecord recordMetric(ProductivityMetricRecord record) {
 
-import com.example.demo.model.ProductivityMetricRecord;
-import com.example.demo.repository.ProductivityMetricRecordRepository;
-import com.example.demo.service.ProductivityMetricService;
-import org.springframework.stereotype.Service;
+    double score =
+            (record.getHoursLogged() * 10) +
+            (record.getTasksCompleted() * 5) +
+            (record.getMeetingsAttended() * 2);
 
-import java.util.List;
-import java.util.Optional;
+    // clamp between 0 and 100
+    if (score < 0) score = 0;
+    if (score > 100) score = 100;
 
-@Service
-public class ProductivityMetricServiceImpl implements ProductivityMetricService {
+    record.setProductivityScore(score);
 
-    private final ProductivityMetricRecordRepository repository;
-
-    public ProductivityMetricServiceImpl(ProductivityMetricRecordRepository repository) {
-        this.repository = repository;
-    }
-
-    @Override
-    public ProductivityMetricRecord recordMetric(ProductivityMetricRecord record) {
-        return repository.save(record);
-    }
-
-    @Override
-    public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
-        return repository.findByEmployeeId(employeeId);
-    }
-
-    @Override
-    public List<ProductivityMetricRecord> getAllMetrics() {
-        return repository.findAll();
-    }
-
-    @Override
-    public Optional<ProductivityMetricRecord> getMetricById(Long id) {
-        return repository.findById(id);
-    }
+    return repository.save(record);
 }
