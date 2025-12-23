@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "team_summary")
+@Table(name = "team_summary_records")
 public class TeamSummaryRecord {
 
     @Id
@@ -18,17 +18,15 @@ public class TeamSummaryRecord {
 
     private Double avgHoursLogged;
 
-    private Integer avgTasksCompleted;
+    private Double avgTasksCompleted;
 
-    private Integer avgScore;
+    private Double avgScore;
 
     private Integer anomalyCount;
 
     private LocalDateTime generatedAt;
 
     public TeamSummaryRecord() {}
-
-    // getters & setters (ALL REQUIRED)
 
     public Long getId() {
         return id;
@@ -62,19 +60,19 @@ public class TeamSummaryRecord {
         this.avgHoursLogged = avgHoursLogged;
     }
 
-    public Integer getAvgTasksCompleted() {
+    public Double getAvgTasksCompleted() {
         return avgTasksCompleted;
     }
 
-    public void setAvgTasksCompleted(Integer avgTasksCompleted) {
+    public void setAvgTasksCompleted(Double avgTasksCompleted) {
         this.avgTasksCompleted = avgTasksCompleted;
     }
 
-    public Integer getAvgScore() {
+    public Double getAvgScore() {
         return avgScore;
     }
 
-    public void setAvgScore(Integer avgScore) {
+    public void setAvgScore(Double avgScore) {
         this.avgScore = avgScore;
     }
 
