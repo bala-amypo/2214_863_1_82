@@ -12,42 +12,85 @@ public class AnomalyFlagRecord {
     private Long id;
 
     private Long employeeId;
+
     private Long metricId;
 
     private String ruleCode;
+
     private String severity;
+
+    @Column(columnDefinition = "TEXT")
     private String details;
 
-    private boolean resolved;
+    private Boolean resolved = false;
+
     private LocalDateTime flaggedAt;
 
-    @PrePersist
-    public void onCreate() {
+    public AnomalyFlagRecord() {
         this.flaggedAt = LocalDateTime.now();
-        this.resolved = false;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getEmployeeId() { return employeeId; }
-    public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getMetricId() { return metricId; }
-    public void setMetricId(Long metricId) { this.metricId = metricId; }
+    public Long getEmployeeId() {
+        return employeeId;
+    }
 
-    public String getRuleCode() { return ruleCode; }
-    public void setRuleCode(String ruleCode) { this.ruleCode = ruleCode; }
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
 
-    public String getSeverity() { return severity; }
-    public void setSeverity(String severity) { this.severity = severity; }
+    public Long getMetricId() {
+        return metricId;
+    }
 
-    public String getDetails() { return details; }
-    public void setDetails(String details) { this.details = details; }
+    public void setMetricId(Long metricId) {
+        this.metricId = metricId;
+    }
 
-    public boolean isResolved() { return resolved; }
-    public void setResolved(boolean resolved) { this.resolved = resolved; }
+    public String getRuleCode() {
+        return ruleCode;
+    }
 
-    public LocalDateTime getFlaggedAt() { return flaggedAt; }
-    public void setFlaggedAt(LocalDateTime flaggedAt) { this.flaggedAt = flaggedAt; }
+    public void setRuleCode(String ruleCode) {
+        this.ruleCode = ruleCode;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(Boolean resolved) {
+        this.resolved = resolved;
+    }
+
+    public LocalDateTime getFlaggedAt() {
+        return flaggedAt;
+    }
+
+    public void setFlaggedAt(LocalDateTime flaggedAt) {
+        this.flaggedAt = flaggedAt;
+    }
 }

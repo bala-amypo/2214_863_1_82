@@ -10,32 +10,65 @@ public class AnomalyRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String ruleCode;
+
     private String description;
+
     private String thresholdType;
-    private Integer thresholdValue;
-    private boolean active;
 
-    private String severity; // LOW / MEDIUM / HIGH
+    private Double thresholdValue;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    private Boolean active = true;
 
-    public String getRuleCode() { return ruleCode; }
-    public void setRuleCode(String ruleCode) { this.ruleCode = ruleCode; }
+    public AnomalyRule() {
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getThresholdType() { return thresholdType; }
-    public void setThresholdType(String thresholdType) { this.thresholdType = thresholdType; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Integer getThresholdValue() { return thresholdValue; }
-    public void setThresholdValue(Integer thresholdValue) { this.thresholdValue = thresholdValue; }
+    public String getRuleCode() {
+        return ruleCode;
+    }
 
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+    public void setRuleCode(String ruleCode) {
+        this.ruleCode = ruleCode;
+    }
 
-    public String getSeverity() { return severity; }
-    public void setSeverity(String severity) { this.severity = severity; }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getThresholdType() {
+        return thresholdType;
+    }
+
+    public void setThresholdType(String thresholdType) {
+        this.thresholdType = thresholdType;
+    }
+
+    public Double getThresholdValue() {
+        return thresholdValue;
+    }
+
+    public void setThresholdValue(Double thresholdValue) {
+        this.thresholdValue = thresholdValue;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }
