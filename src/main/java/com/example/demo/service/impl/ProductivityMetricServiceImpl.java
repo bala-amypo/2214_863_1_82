@@ -18,37 +18,60 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         this.repository = repository;
     }
 
+    // ✅ POST /api/metrics
     @Override
     public ProductivityMetricRecord recordMetric(ProductivityMetricRecord record) {
 
-        // ✅ Calculate productivity score
-        double score = (record.getHoursLogged() * 10)
-                     + (record.getTasksCompleted() * 5)
-                     + (record.getMeetingsAttended() * 2);
-
-        // ✅ Clamp score between 0 and 100
-        score = Math.max(0, Math.min(score, 100));
-
-        record.setProductivityScore(score);
-
-        // ✅ Set submitted time automatically
+        calculateScore(record);
         record.setSubmittedAt(LocalDateTime.now());
 
         return repository.save(record);
     }
 
+    // ✅ PUT /api/metrics/{id}
+    @Override
+    public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
+
+        ProductivityMetricRecord existing = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Metric not found"));
+
+        existing.setDate(updated.getDate());
+        existing.setHoursLogged(updated.getHoursLogged());
+        existing.setTasksCompleted(updated.getTasksCompleted());
+        existing.setMeetingsAttended(updated.getMeetingsAttended());
+        existing.setRawDataJson(updated.getRawDataJson());
+
+        calculateScore(existing);
+
+        return repository.save(existing);
+    }
+
+    // ✅ GET /api/metrics/employee/{employeeId}
     @Override
     public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
         return repository.findByEmployeeId(employeeId);
     }
 
+    // ✅ GET /api/metrics
     @Override
     public List<ProductivityMetricRecord> getAllMetrics() {
         return repository.findAll();
     }
 
+    // ✅ GET /api/metrics/{id}
     @Override
     public Optional<ProductivityMetricRecord> getMetricById(Long id) {
         return repository.findById(id);
+    }
+
+    // 🔹 Helper method (clean + reusable)
+    private void calculateScore(ProductivityMetricRecord record) {
+        double score =
+                (record.getHoursLogged() * 10) +
+                (record.getTasksCompleted() * 5) +
+                (record.getMeetingsAttended() * 2);
+
+        score = Math.max(0, Math.min(score, 100));
+        record.setProductivityScore(score);
     }
 }
