@@ -1,3 +1,9 @@
+package com.example.demo.service;
+
+import java.util.List;
+
+import com.example.demo.model.AnomalyRule;
+
 public interface AnomalyRuleService {
 
     AnomalyRule createRule(AnomalyRule rule);
@@ -11,9 +17,9 @@ public interface AnomalyRuleService {
     void deleteRule(Long id);
 
     boolean evaluateRule(
-        AnomalyRule rule,
-        Integer productivityScore,
-        Integer hoursLogged,
-        Integer meetingsAttended
+            AnomalyRule rule,
+            Integer productivityScore,
+            Integer hoursLogged,
+            Integer meetingsAttended
     );
 }

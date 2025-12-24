@@ -18,11 +18,8 @@ public class AnomalyRuleServiceImpl implements AnomalyRuleService {
         this.repository = repository;
     }
 
-    // ---------------- CRUD ----------------
-
     @Override
     public AnomalyRule createRule(AnomalyRule rule) {
-        rule.setActive(true); // tests expect active by default
         return repository.save(rule);
     }
 
@@ -34,19 +31,18 @@ public class AnomalyRuleServiceImpl implements AnomalyRuleService {
     @Override
     public AnomalyRule getRuleById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Rule not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
     }
 
     @Override
-    public AnomalyRule updateRule(Long id, AnomalyRule updated) {
+    public AnomalyRule updateRule(Long id, AnomalyRule rule) {
         AnomalyRule existing = getRuleById(id);
 
-        existing.setRuleCode(updated.getRuleCode());
-        existing.setDescription(updated.getDescription());
-        existing.setThresholdType(updated.getThresholdType());
-        existing.setThresholdValue(updated.getThresholdValue());
-        existing.setActive(updated.getActive());
+        existing.setRuleCode(rule.getRuleCode());
+        existing.setDescription(rule.getDescription());
+        existing.setThresholdType(rule.getThresholdType());
+        existing.setThresholdValue(rule.getThresholdValue());
+        existing.setActive(rule.getActive());
 
         return repository.save(existing);
     }
@@ -56,8 +52,6 @@ public class AnomalyRuleServiceImpl implements AnomalyRuleService {
         AnomalyRule rule = getRuleById(id);
         repository.delete(rule);
     }
-
-    // ---------------- RULE EVALUATION ----------------
 
     @Override
     public boolean evaluateRule(
@@ -71,26 +65,38 @@ public class AnomalyRuleServiceImpl implements AnomalyRuleService {
             return false;
         }
 
-        Integer threshold = rule.getThresholdValue();
+        Double threshold = rule.getThresholdValue();
+        if (threshold == null) {
+            return false;
+        }
 
-        return switch (rule.getThresholdType()) {
+        String type = rule.getThresholdType();
 
-            case "SCORE_BELOW" ->
-                    productivityScore != null && productivityScore < threshold;
+        if ("SCORE_BELOW".equals(type)) {
+            return productivityScore != null
+                    && productivityScore.doubleValue() < threshold;
+        }
 
-            case "SCORE_ABOVE" ->
-                    productivityScore != null && productivityScore > threshold;
+        if ("SCORE_ABOVE".equals(type)) {
+            return productivityScore != null
+                    && productivityScore.doubleValue() > threshold;
+        }
 
-            case "HOURS_BELOW" ->
-                    hoursLogged != null && hoursLogged < threshold;
+        if ("HOURS_BELOW".equals(type)) {
+            return hoursLogged != null
+                    && hoursLogged.doubleValue() < threshold;
+        }
 
-            case "HOURS_ABOVE" ->
-                    hoursLogged != null && hoursLogged > threshold;
+        if ("HOURS_ABOVE".equals(type)) {
+            return hoursLogged != null
+                    && hoursLogged.doubleValue() > threshold;
+        }
 
-            case "MEETINGS_ABOVE" ->
-                    meetingsAttended != null && meetingsAttended > threshold;
+        if ("MEETINGS_ABOVE".equals(type)) {
+            return meetingsAttended != null
+                    && meetingsAttended.doubleValue() > threshold;
+        }
 
-            default -> false;
-        };
+        return false;
     }
 }
