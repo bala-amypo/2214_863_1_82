@@ -1,84 +1,93 @@
 package com.example.demo.service.impl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.example.demo.model.TeamSummaryRecord;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.ProductivityMetricRecord;
-import com.example.demo.model.AnomalyFlagRecord;
-import com.example.demo.repository.TeamSummaryRecordRepository;
+import com.example.demo.model.TeamSummaryRecord;
 import com.example.demo.repository.ProductivityMetricRecordRepository;
-import com.example.demo.repository.AnomalyFlagRecordRepository;
+import com.example.demo.repository.TeamSummaryRecordRepository;
 import com.example.demo.service.TeamSummaryService;
 
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
-@Transactional
 public class TeamSummaryServiceImpl implements TeamSummaryService {
 
-    private final TeamSummaryRecordRepository teamSummaryRecordRepository;
-    private final ProductivityMetricRecordRepository productivityMetricRecordRepository;
-    private final AnomalyFlagRecordRepository anomalyFlagRecordRepository;
+    private final TeamSummaryRecordRepository teamSummaryRepository;
+    private final ProductivityMetricRecordRepository metricRepository;
 
+    // ✅ Constructor injection only
     public TeamSummaryServiceImpl(
-            TeamSummaryRecordRepository teamSummaryRecordRepository,
-            ProductivityMetricRecordRepository productivityMetricRecordRepository,
-            AnomalyFlagRecordRepository anomalyFlagRecordRepository) {
-
-        this.teamSummaryRecordRepository = teamSummaryRecordRepository;
-        this.productivityMetricRecordRepository = productivityMetricRecordRepository;
-        this.anomalyFlagRecordRepository = anomalyFlagRecordRepository;
+            TeamSummaryRecordRepository teamSummaryRepository,
+            ProductivityMetricRecordRepository metricRepository
+    ) {
+        this.teamSummaryRepository = teamSummaryRepository;
+        this.metricRepository = metricRepository;
     }
 
     @Override
     public TeamSummaryRecord generateSummary(String teamName, LocalDate summaryDate) {
 
-        List<ProductivityMetricRecord> metrics =
-                productivityMetricRecordRepository.findAll()
-                        .stream()
-                        .filter(m -> summaryDate.equals(m.getDate()))
-                        .toList();
+        // Enforce one summary per team per date
+        teamSummaryRepository
+                .findByTeamNameAndSummaryDate(teamName, summaryDate)
+                .ifPresent(existing -> {
+                    throw new IllegalStateException(
+                            "Summary already exists for this team and date"
+                    );
+                });
 
-        Double avgHours = metrics.stream()
-                .mapToDouble(ProductivityMetricRecord::getHoursLogged)
+        // Fetch all metrics
+        List<ProductivityMetricRecord> allMetrics = metricRepository.findAll();
+
+        // Filter metrics by team
+        List<ProductivityMetricRecord> teamMetrics = allMetrics.stream()
+                .filter(m -> m.getEmployee() != null)
+                .filter(m -> teamName.equals(m.getEmployee().getTeamName()))
+                .toList();
+
+        if (teamMetrics.isEmpty()) {
+            throw new ResourceNotFoundException("Summary not found");
+        }
+
+        double avgHours = teamMetrics.stream()
+                .mapToDouble(m -> m.getHoursLogged() != null ? m.getHoursLogged() : 0.0)
                 .average()
                 .orElse(0.0);
 
-        Double avgTasks = metrics.stream()
-                .mapToInt(ProductivityMetricRecord::getTasksCompleted)
+        double avgTasks = teamMetrics.stream()
+                .mapToInt(m -> m.getTasksCompleted() != null ? m.getTasksCompleted() : 0)
                 .average()
                 .orElse(0.0);
 
-        Double avgScore = metrics.stream()
-                .mapToDouble(ProductivityMetricRecord::getProductivityScore)
+        double avgScore = teamMetrics.stream()
+                .mapToDouble(m -> m.getProductivityScore() != null ? m.getProductivityScore() : 0.0)
                 .average()
                 .orElse(0.0);
 
-        Integer anomalyCount =
-                (int) anomalyFlagRecordRepository.findAll().stream().count();
+        int anomalyCount = 0; // anomaly count can be derived later if needed
 
-        TeamSummaryRecord summary = new TeamSummaryRecord();
-        summary.setTeamName(teamName);
-        summary.setSummaryDate(summaryDate);
-        summary.setAvgHoursLogged(avgHours);
-        summary.setAvgTasksCompleted(avgTasks);
-        summary.setAvgScore(avgScore);
-        summary.setAnomalyCount(anomalyCount);
-        summary.setGeneratedAt(LocalDateTime.now());
+        TeamSummaryRecord summary = new TeamSummaryRecord(
+                teamName,
+                summaryDate,
+                avgHours,
+                avgTasks,
+                avgScore,
+                anomalyCount
+        );
 
-        return teamSummaryRecordRepository.save(summary);
+        return teamSummaryRepository.save(summary);
     }
 
     @Override
     public List<TeamSummaryRecord> getSummariesByTeam(String teamName) {
-        return teamSummaryRecordRepository.findByTeamName(teamName);
+        return teamSummaryRepository.findByTeamName(teamName);
     }
 
     @Override
     public List<TeamSummaryRecord> getAllSummaries() {
-        return teamSummaryRecordRepository.findAll();
+        return teamSummaryRepository.findAll();
     }
 }
