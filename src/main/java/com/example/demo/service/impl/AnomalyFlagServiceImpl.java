@@ -20,7 +20,7 @@ public class AnomalyFlagServiceImpl implements AnomalyFlagService {
     }
 
     @Override
-    public AnomalyFlagRecord flagAnomaly(AnomalyFlagRecord record) {
+    public AnomalyFlagRecord createFlag(AnomalyFlagRecord record) {
         record.setResolved(false);
         record.setFlaggedAt(LocalDateTime.now());
         return repository.save(record);
@@ -32,12 +32,12 @@ public class AnomalyFlagServiceImpl implements AnomalyFlagService {
     }
 
     @Override
-    public List<AnomalyFlagRecord> getFlagsByEmployee(Long employeeId) {
+    public List<AnomalyFlagRecord> getFlagsByEmployeeId(Long employeeId) {
         return repository.findByEmployeeId(employeeId);
     }
 
     @Override
-    public List<AnomalyFlagRecord> getFlagsByMetric(Long metricId) {
+    public List<AnomalyFlagRecord> getFlagsByMetricId(Long metricId) {
         return repository.findByMetricId(metricId);
     }
 
