@@ -10,6 +10,8 @@ public interface AnomalyRuleService {
 
     List<AnomalyRule> getAllRules();
 
+    List<AnomalyRule> getActiveRules();
+
     AnomalyRule getRuleById(Long id);
 
     AnomalyRule updateRule(Long id, AnomalyRule rule);

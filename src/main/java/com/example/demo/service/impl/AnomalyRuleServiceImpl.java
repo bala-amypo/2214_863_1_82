@@ -29,6 +29,11 @@ public class AnomalyRuleServiceImpl implements AnomalyRuleService {
     }
 
     @Override
+    public List<AnomalyRule> getActiveRules() {
+        return repository.findByActiveTrue();
+    }
+
+    @Override
     public AnomalyRule getRuleById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
