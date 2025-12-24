@@ -1,12 +1,15 @@
 package com.example.demo.controller;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.web.bind.annotation.*;
-
+import com.example.demo.dto.TeamSummaryDto;
 import com.example.demo.model.TeamSummaryRecord;
 import com.example.demo.service.TeamSummaryService;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/team-summaries")
@@ -19,32 +22,54 @@ public class TeamSummaryController {
     }
 
     @PostMapping("/generate")
-    public TeamSummaryRecord generateSummary(
+    public ResponseEntity<TeamSummaryDto> generateSummary(
             @RequestParam String teamName,
-            @RequestParam String date) {
-
-        return teamSummaryService.generateSummary(
-                teamName,
-                LocalDate.parse(date)
-        );
+            @RequestParam String summaryDate
+    ) {
+        TeamSummaryRecord summary =
+                teamSummaryService.generateSummary(
+                        teamName,
+                        LocalDate.parse(summaryDate)
+                );
+        return ResponseEntity.ok(toDto(summary));
     }
 
     @GetMapping("/team/{teamName}")
-    public List<TeamSummaryRecord> getByTeam(@PathVariable String teamName) {
-        return teamSummaryService.getSummariesByTeam(teamName);
+    public ResponseEntity<List<TeamSummaryDto>> getByTeam(
+            @PathVariable String teamName
+    ) {
+        List<TeamSummaryDto> list =
+                teamSummaryService.getSummariesByTeam(teamName)
+                        .stream()
+                        .map(this::toDto)
+                        .collect(Collectors.toList());
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping
-    public List<TeamSummaryRecord> getAll() {
-        return teamSummaryService.getAllSummaries();
+    public ResponseEntity<List<TeamSummaryDto>> getAll() {
+        List<TeamSummaryDto> list =
+                teamSummaryService.getAllSummaries()
+                        .stream()
+                        .map(this::toDto)
+                        .collect(Collectors.toList());
+        return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/{id}")
-    public TeamSummaryRecord getById(@PathVariable Long id) {
-        return teamSummaryService.getAllSummaries()
-                .stream()
-                .filter(s -> s.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    /* ---------- MAPPER ---------- */
+
+    private TeamSummaryDto toDto(TeamSummaryRecord record) {
+
+        TeamSummaryDto dto = new TeamSummaryDto();
+        dto.setId(record.getId());
+        dto.setTeamName(record.getTeamName());
+        dto.setSummaryDate(record.getSummaryDate());
+        dto.setAvgHoursLogged(record.getAvgHoursLogged());
+        dto.setAvgTasksCompleted(record.getAvgTasksCompleted());
+        dto.setAvgScore(record.getAvgScore());
+        dto.setAnomalyCount(record.getAnomalyCount());
+        dto.setGeneratedAt(record.getGeneratedAt());
+
+        return dto;
     }
 }
