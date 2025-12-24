@@ -12,66 +12,40 @@ public class AnomalyFlagRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "employee_id")
-    private EmployeeProfile employee;
+    private Long employeeId;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "metric_id")
-    private ProductivityMetricRecord metric;
+    private Long metricId;
 
-    @Column(nullable = false)
     private String ruleCode;
 
-    @Column(nullable = false)
-    private String severity;
+    private String description;
 
-    @Column(length = 500)
-    private String details;
+    private boolean resolved;
 
-    @Column(nullable = false)
-    private Boolean resolved = false;
-
-    @Column(nullable = false)
     private LocalDateTime flaggedAt;
 
-    // ---------- constructors ----------
-    public AnomalyFlagRecord() {
-    }
+    private LocalDateTime resolvedAt;
 
-    public AnomalyFlagRecord(EmployeeProfile employee,
-                             ProductivityMetricRecord metric,
-                             String ruleCode,
-                             String severity,
-                             String details) {
-        this.employee = employee;
-        this.metric = metric;
-        this.ruleCode = ruleCode;
-        this.severity = severity;
-        this.details = details;
-        this.flaggedAt = LocalDateTime.now();
-        this.resolved = false;
-    }
+    // ===== getters & setters =====
 
-    // ---------- getters & setters ----------
     public Long getId() {
         return id;
     }
 
-    public EmployeeProfile getEmployee() {
-        return employee;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployee(EmployeeProfile employee) {
-        this.employee = employee;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public ProductivityMetricRecord getMetric() {
-        return metric;
+    public Long getMetricId() {
+        return metricId;
     }
 
-    public void setMetric(ProductivityMetricRecord metric) {
-        this.metric = metric;
+    public void setMetricId(Long metricId) {
+        this.metricId = metricId;
     }
 
     public String getRuleCode() {
@@ -82,27 +56,19 @@ public class AnomalyFlagRecord {
         this.ruleCode = ruleCode;
     }
 
-    public String getSeverity() {
-        return severity;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSeverity(String severity) {
-        this.severity = severity;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    public Boolean getResolved() {
+    public boolean isResolved() {
         return resolved;
     }
 
-    public void setResolved(Boolean resolved) {
+    public void setResolved(boolean resolved) {
         this.resolved = resolved;
     }
 
@@ -112,5 +78,13 @@ public class AnomalyFlagRecord {
 
     public void setFlaggedAt(LocalDateTime flaggedAt) {
         this.flaggedAt = flaggedAt;
+    }
+
+    public LocalDateTime getResolvedAt() {
+        return resolvedAt;
+    }
+
+    public void setResolvedAt(LocalDateTime resolvedAt) {
+        this.resolvedAt = resolvedAt;
     }
 }

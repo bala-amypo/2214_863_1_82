@@ -6,13 +6,13 @@ import com.example.demo.model.AnomalyFlagRecord;
 
 public interface AnomalyFlagService {
 
-    AnomalyFlagRecord flagAnomaly(AnomalyFlagRecord record);
+    AnomalyFlagRecord createFlag(AnomalyFlagRecord record);
 
     List<AnomalyFlagRecord> getAllFlags();
 
-    List<AnomalyFlagRecord> getFlagsByEmployee(Long employeeId);
+    List<AnomalyFlagRecord> getFlagsByEmployeeId(Long employeeId);
 
-    List<AnomalyFlagRecord> getFlagsByMetric(Long metricId);
+    List<AnomalyFlagRecord> getFlagsByMetricId(Long metricId);
 
     AnomalyFlagRecord resolveFlag(Long id);
 }
