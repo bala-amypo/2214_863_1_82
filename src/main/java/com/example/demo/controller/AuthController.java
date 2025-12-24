@@ -18,15 +18,29 @@ public class AuthController {
         this.userAccountService = userAccountService;
     }
 
+    // ✅ REGISTER
     @PostMapping("/register")
     public ResponseEntity<UserAccount> register(
             @RequestBody RegisterRequest request) {
 
         UserAccount user = new UserAccount();
         user.setEmail(request.getEmail());
-        user.setPasswordHash(request.getPassword()); // encoded in service
+        user.setPasswordHash(request.getPassword());
 
         UserAccount saved = userAccountService.registerUser(user);
         return ResponseEntity.ok(saved);
+    }
+
+    // ✅ LOGIN (THIS WAS MISSING)
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(
+            @RequestBody AuthRequest request) {
+
+        AuthResponse response = userAccountService.login(
+                request.getEmail(),
+                request.getPassword()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
