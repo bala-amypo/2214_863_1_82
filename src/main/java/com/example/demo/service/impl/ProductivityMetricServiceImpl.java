@@ -1,66 +1,104 @@
 package com.example.demo.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.EmployeeProfile;
-import com.example.demo.model.ProductivityMetricRecord;
-import com.example.demo.repository.EmployeeProfileRepository;
-import com.example.demo.repository.ProductivityMetricRecordRepository;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.ProductivityMetricService;
 import com.example.demo.util.ProductivityCalculator;
 
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
 @Service
-@Transactional
 public class ProductivityMetricServiceImpl implements ProductivityMetricService {
 
     private final ProductivityMetricRecordRepository metricRepository;
     private final EmployeeProfileRepository employeeRepository;
+    private final AnomalyRuleRepository anomalyRuleRepository;
+    private final AnomalyFlagRecordRepository anomalyFlagRepository;
 
+    // ⚠️ Constructor parameter ORDER matters (tests reflect this)
     public ProductivityMetricServiceImpl(
             ProductivityMetricRecordRepository metricRepository,
-            EmployeeProfileRepository employeeRepository) {
+            EmployeeProfileRepository employeeRepository,
+            AnomalyRuleRepository anomalyRuleRepository,
+            AnomalyFlagRecordRepository anomalyFlagRepository
+    ) {
         this.metricRepository = metricRepository;
         this.employeeRepository = employeeRepository;
+        this.anomalyRuleRepository = anomalyRuleRepository;
+        this.anomalyFlagRepository = anomalyFlagRepository;
     }
 
     @Override
-    public ProductivityMetricRecord createMetric(ProductivityMetricRecord metric) {
+    public ProductivityMetricRecord recordMetric(ProductivityMetricRecord metric) {
 
-        EmployeeProfile employee = employeeRepository
-                .findById(metric.getEmployeeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+        // 1️⃣ Validate employee
+        EmployeeProfile employee = employeeRepository.findById(
+                metric.getEmployee().getId()
+        ).orElseThrow(() ->
+                new ResourceNotFoundException("Employee not found"));
 
-        if (!employee.getActive()) {
-            throw new IllegalStateException("Employee not active");
+        if (!Boolean.TRUE.equals(employee.getActive())) {
+            throw new ResourceNotFoundException("Employee not found");
         }
 
-        boolean exists = metricRepository
-                .findByEmployeeIdAndDate(metric.getEmployeeId(), metric.getDate())
-                .isPresent();
+        // 2️⃣ Enforce one metric per employee per date
+        metricRepository
+                .findByEmployee_IdAndDate(employee.getId(), metric.getDate())
+                .ifPresent(existing -> {
+                    throw new IllegalStateException(
+                            "Metric already exists for this employee and date"
+                    );
+                });
 
-        if (exists) {
-            throw new IllegalStateException("Metric already exists for this employee and date");
-        }
-
+        // 3️⃣ Compute productivity score
         double score = ProductivityCalculator.computeScore(metric);
         metric.setProductivityScore(score);
-        metric.setSubmittedAt(LocalDateTime.now());
+        metric.setEmployee(employee);
 
-        return metricRepository.save(metric);
+        // 4️⃣ Save metric
+        ProductivityMetricRecord savedMetric = metricRepository.save(metric);
+
+        // 5️⃣ Apply active anomaly rules
+        List<AnomalyRule> activeRules = anomalyRuleRepository.findByActiveTrue();
+
+        for (AnomalyRule rule : activeRules) {
+
+            boolean triggered = false;
+
+            if ("SCORE_BELOW".equalsIgnoreCase(rule.getThresholdType())) {
+                if (savedMetric.getProductivityScore() < rule.getThresholdValue()) {
+                    triggered = true;
+                }
+            }
+
+            if (triggered) {
+                AnomalyFlagRecord flag = new AnomalyFlagRecord(
+                        employee,
+                        savedMetric,
+                        rule.getRuleCode(),
+                        "LOW",
+                        rule.getDescription()
+                );
+                anomalyFlagRepository.save(flag);
+            }
+        }
+
+        return savedMetric;
     }
 
     @Override
-    public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
-
+    public ProductivityMetricRecord updateMetric(
+            Long id,
+            ProductivityMetricRecord updated
+    ) {
         ProductivityMetricRecord existing = metricRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Metric not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Metric not found"));
 
-        existing.setDate(updated.getDate());
         existing.setHoursLogged(updated.getHoursLogged());
         existing.setTasksCompleted(updated.getTasksCompleted());
         existing.setMeetingsAttended(updated.getMeetingsAttended());
@@ -73,14 +111,13 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
     }
 
     @Override
-    public ProductivityMetricRecord getMetricById(Long id) {
-        return metricRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Metric not found"));
+    public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
+        return metricRepository.findByEmployee_Id(employeeId);
     }
 
     @Override
-    public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
-        return metricRepository.findByEmployeeId(employeeId);
+    public Optional<ProductivityMetricRecord> getMetricById(Long id) {
+        return metricRepository.findById(id);
     }
 
     @Override
