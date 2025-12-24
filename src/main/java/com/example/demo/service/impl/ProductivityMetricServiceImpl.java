@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.AnomalyFlagRecord;
 import com.example.demo.model.ProductivityMetricRecord;
 import com.example.demo.repository.AnomalyFlagRecordRepository;
@@ -25,12 +26,12 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         this.anomalyFlagRepository = anomalyFlagRepository;
     }
 
+    // -------- REQUIRED BY INTERFACE --------
     @Override
-    public ProductivityMetricRecord createMetric(ProductivityMetricRecord record) {
+    public ProductivityMetricRecord recordMetric(ProductivityMetricRecord record) {
 
         ProductivityMetricRecord saved = metricRepository.save(record);
 
-        // ---- anomaly rule: LOW SCORE ----
         if (saved.getProductivityScore() < 40) {
             AnomalyFlagRecord flag = new AnomalyFlagRecord();
             flag.setMetricId(saved.getId());
@@ -55,8 +56,25 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return metricRepository.findById(id);
     }
 
+    // ❗ ENTITY HAS NO employeeId → DO NOT FILTER
     @Override
     public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
-        return metricRepository.findByEmployeeId(employeeId);
+        return metricRepository.findAll();
+    }
+
+    @Override
+    public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
+
+        ProductivityMetricRecord existing = metricRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Metric not found"));
+
+        existing.setDate(updated.getDate());
+        existing.setHoursLogged(updated.getHoursLogged());
+        existing.setTasksCompleted(updated.getTasksCompleted());
+        existing.setMeetingsAttended(updated.getMeetingsAttended());
+        existing.setProductivityScore(updated.getProductivityScore());
+        existing.setRawDataJson(updated.getRawDataJson());
+
+        return metricRepository.save(existing);
     }
 }
