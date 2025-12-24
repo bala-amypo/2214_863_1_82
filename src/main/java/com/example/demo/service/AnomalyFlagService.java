@@ -1,19 +1,18 @@
 package com.example.demo.service;
 
 import java.util.List;
+
 import com.example.demo.model.AnomalyFlagRecord;
 
 public interface AnomalyFlagService {
 
-    AnomalyFlagRecord createFlag(AnomalyFlagRecord flag);
+    AnomalyFlagRecord flagAnomaly(AnomalyFlagRecord record);
 
     List<AnomalyFlagRecord> getAllFlags();
 
-    AnomalyFlagRecord getFlagById(Long id);
+    List<AnomalyFlagRecord> getFlagsByEmployee(Long employeeId);
 
-    List<AnomalyFlagRecord> getFlagsByEmployeeId(Long employeeId);
-
-    List<AnomalyFlagRecord> getFlagsByMetricId(Long metricId);
+    List<AnomalyFlagRecord> getFlagsByMetric(Long metricId);
 
     AnomalyFlagRecord resolveFlag(Long id);
 }

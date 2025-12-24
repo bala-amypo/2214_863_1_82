@@ -19,45 +19,35 @@ public class AnomalyFlagServiceImpl implements AnomalyFlagService {
         this.repository = repository;
     }
 
-    // ---------------- CREATE ----------------
     @Override
-    public AnomalyFlagRecord createFlag(AnomalyFlagRecord flag) {
-        flag.setResolved(false);
-        flag.setFlaggedAt(LocalDateTime.now());
-        return repository.save(flag);
+    public AnomalyFlagRecord flagAnomaly(AnomalyFlagRecord record) {
+        record.setResolved(false);
+        record.setFlaggedAt(LocalDateTime.now());
+        return repository.save(record);
     }
 
-    // ---------------- READ ----------------
     @Override
     public List<AnomalyFlagRecord> getAllFlags() {
         return repository.findAll();
     }
 
     @Override
-    public AnomalyFlagRecord getFlagById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Anomaly not found with id " + id));
-    }
-
-    @Override
-    public List<AnomalyFlagRecord> getFlagsByEmployeeId(Long employeeId) {
+    public List<AnomalyFlagRecord> getFlagsByEmployee(Long employeeId) {
         return repository.findByEmployeeId(employeeId);
     }
 
     @Override
-    public List<AnomalyFlagRecord> getFlagsByMetricId(Long metricId) {
+    public List<AnomalyFlagRecord> getFlagsByMetric(Long metricId) {
         return repository.findByMetricId(metricId);
     }
 
-    // ---------------- RESOLVE ----------------
     @Override
     public AnomalyFlagRecord resolveFlag(Long id) {
-        AnomalyFlagRecord flag = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Anomaly not found with id " + id));
+        AnomalyFlagRecord record = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Anomaly flag not found"));
 
-        flag.setResolved(true);
-        return repository.save(flag);
+        record.setResolved(true);
+        record.setResolvedAt(LocalDateTime.now());
+        return repository.save(record);
     }
 }
