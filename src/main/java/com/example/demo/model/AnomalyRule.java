@@ -3,26 +3,54 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "anomaly_rules")
+@Table(
+    name = "anomaly_rules",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "rule_code")
+    }
+)
 public class AnomalyRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(name = "rule_code", nullable = false, unique = true)
     private String ruleCode;
 
+    @Column(nullable = false)
     private String description;
 
+    @Column(name = "threshold_type", nullable = false)
     private String thresholdType;
 
+    @Column(name = "threshold_value", nullable = false)
     private Double thresholdValue;
 
-    private Boolean active = true;
+    @Column(nullable = false)
+    private Boolean active;
+
+    /* ---------- CONSTRUCTORS ---------- */
 
     public AnomalyRule() {
+        // required by JPA
     }
+
+    public AnomalyRule(
+            String ruleCode,
+            String description,
+            String thresholdType,
+            Double thresholdValue,
+            Boolean active
+    ) {
+        this.ruleCode = ruleCode;
+        this.description = description;
+        this.thresholdType = thresholdType;
+        this.thresholdValue = thresholdValue;
+        this.active = active;
+    }
+
+    /* ---------- GETTERS & SETTERS ---------- */
 
     public Long getId() {
         return id;
