@@ -21,42 +21,38 @@ public class AnomalyFlagServiceImpl implements AnomalyFlagService {
 
     // ---------------- CREATE ----------------
     @Override
-    public AnomalyFlagRecord create(AnomalyFlagRecord flag) {
-
-        // default values (tests expect this)
+    public AnomalyFlagRecord createFlag(AnomalyFlagRecord flag) {
         flag.setResolved(false);
         flag.setFlaggedAt(LocalDateTime.now());
-
         return repository.save(flag);
     }
 
     // ---------------- READ ----------------
     @Override
-    public List<AnomalyFlagRecord> getAll() {
+    public List<AnomalyFlagRecord> getAllFlags() {
         return repository.findAll();
     }
 
     @Override
-    public AnomalyFlagRecord getById(Long id) {
+    public AnomalyFlagRecord getFlagById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Anomaly not found with id " + id));
     }
 
     @Override
-    public List<AnomalyFlagRecord> getByEmployeeId(Long employeeId) {
+    public List<AnomalyFlagRecord> getFlagsByEmployeeId(Long employeeId) {
         return repository.findByEmployeeId(employeeId);
     }
 
     @Override
-    public List<AnomalyFlagRecord> getByMetricId(Long metricId) {
+    public List<AnomalyFlagRecord> getFlagsByMetricId(Long metricId) {
         return repository.findByMetricId(metricId);
     }
 
     // ---------------- RESOLVE ----------------
     @Override
-    public AnomalyFlagRecord resolve(Long id) {
-
+    public AnomalyFlagRecord resolveFlag(Long id) {
         AnomalyFlagRecord flag = repository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Anomaly not found with id " + id));
