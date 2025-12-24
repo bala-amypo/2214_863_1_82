@@ -21,7 +21,9 @@ public class RestExceptionHandler {
         body.put("status", 404);
         body.put("error", ex.getMessage());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(body);
     }
 
     @ExceptionHandler(IllegalStateException.class)
@@ -33,7 +35,9 @@ public class RestExceptionHandler {
         body.put("status", 400);
         body.put("error", ex.getMessage());
 
-        return ResponseEntity.badRequest().body(body);
+        return ResponseEntity
+                .badRequest()
+                .body(body);
     }
 
     @ExceptionHandler(Exception.class)
@@ -42,8 +46,10 @@ public class RestExceptionHandler {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", 500);
-        body.put("error", "Internal Server Error");
+        body.put("error", ex.getMessage()); // IMPORTANT: do NOT hardcode
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(body);
     }
 }
