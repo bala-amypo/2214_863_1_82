@@ -2,29 +2,70 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "user_accounts")
+@Table(
+    name = "user_accounts",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+    }
+)
 public class UserAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String username;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    private String role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "role")
+    private Set<String> role = new HashSet<>();
 
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /* ---------- CONSTRUCTORS ---------- */
+
     public UserAccount() {
+        // required by JPA
+    }
+
+    public UserAccount(
+            String username,
+            String email,
+            String passwordHash,
+            Set<String> role
+    ) {
+        this.username = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        if (role != null) {
+            this.role = role;
+        }
+    }
+
+    /* ---------- LIFECYCLE ---------- */
+
+    @PrePersist
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    /* ---------- GETTERS & SETTERS ---------- */
 
     public Long getId() {
         return id;
@@ -58,19 +99,15 @@ public class UserAccount {
         this.passwordHash = passwordHash;
     }
 
-    public String getRole() {
+    public Set<String> getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Set<String> role) {
         this.role = role;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

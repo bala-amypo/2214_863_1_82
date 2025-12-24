@@ -5,28 +5,69 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "team_summary_records")
+@Table(
+    name = "team_summary_records",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "team_name", "summary_date" })
+    }
+)
 public class TeamSummaryRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "team_name", nullable = false)
     private String teamName;
 
+    @Column(name = "summary_date", nullable = false)
     private LocalDate summaryDate;
 
+    @Column(name = "avg_hours_logged", nullable = false)
     private Double avgHoursLogged;
 
+    @Column(name = "avg_tasks_completed", nullable = false)
     private Double avgTasksCompleted;
 
+    @Column(name = "avg_score", nullable = false)
     private Double avgScore;
 
+    @Column(name = "anomaly_count", nullable = false)
     private Integer anomalyCount;
 
+    @Column(name = "generated_at", nullable = false, updatable = false)
     private LocalDateTime generatedAt;
 
-    public TeamSummaryRecord() {}
+    /* ---------- CONSTRUCTORS ---------- */
+
+    public TeamSummaryRecord() {
+        // required by JPA
+    }
+
+    public TeamSummaryRecord(
+            String teamName,
+            LocalDate summaryDate,
+            Double avgHoursLogged,
+            Double avgTasksCompleted,
+            Double avgScore,
+            Integer anomalyCount
+    ) {
+        this.teamName = teamName;
+        this.summaryDate = summaryDate;
+        this.avgHoursLogged = avgHoursLogged;
+        this.avgTasksCompleted = avgTasksCompleted;
+        this.avgScore = avgScore;
+        this.anomalyCount = anomalyCount;
+    }
+
+    /* ---------- LIFECYCLE ---------- */
+
+    @PrePersist
+    protected void onCreate() {
+        this.generatedAt = LocalDateTime.now();
+    }
+
+    /* ---------- GETTERS & SETTERS ---------- */
 
     public Long getId() {
         return id;
@@ -86,9 +127,5 @@ public class TeamSummaryRecord {
 
     public LocalDateTime getGeneratedAt() {
         return generatedAt;
-    }
-
-    public void setGeneratedAt(LocalDateTime generatedAt) {
-        this.generatedAt = generatedAt;
     }
 }
