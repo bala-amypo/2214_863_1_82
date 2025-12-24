@@ -1,7 +1,8 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "anomaly_flag_records")
@@ -11,44 +12,40 @@ public class AnomalyFlagRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ---------- RELATIONSHIPS ----------
-    @ManyToOne
-    @JoinColumn(name = "employee_id", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "employee_id")
     private EmployeeProfile employee;
 
-    @ManyToOne
-    @JoinColumn(name = "metric_id", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "metric_id")
     private ProductivityMetricRecord metric;
 
-    // ---------- FOREIGN KEYS ----------
-    private Long employeeId;
-    private Long metricId;
-
+    @Column(nullable = false)
     private String ruleCode;
+
+    @Column(nullable = false)
     private String severity;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 500)
     private String details;
 
+    @Column(nullable = false)
+    private Boolean resolved = false;
+
+    @Column(nullable = false)
     private LocalDateTime flaggedAt;
-    private Boolean resolved;
 
-    // ---------- CONSTRUCTORS ----------
+    // ---------- constructors ----------
+    public AnomalyFlagRecord() {
+    }
 
-    public AnomalyFlagRecord() {}
-
-    // Constructor REQUIRED by ProductivityMetricService
-    public AnomalyFlagRecord(
-            EmployeeProfile employee,
-            ProductivityMetricRecord metric,
-            String ruleCode,
-            String severity,
-            String details
-    ) {
+    public AnomalyFlagRecord(EmployeeProfile employee,
+                             ProductivityMetricRecord metric,
+                             String ruleCode,
+                             String severity,
+                             String details) {
         this.employee = employee;
         this.metric = metric;
-        this.employeeId = employee.getId();
-        this.metricId = metric.getId();
         this.ruleCode = ruleCode;
         this.severity = severity;
         this.details = details;
@@ -56,8 +53,7 @@ public class AnomalyFlagRecord {
         this.resolved = false;
     }
 
-    // ---------- GETTERS & SETTERS ----------
-
+    // ---------- getters & setters ----------
     public Long getId() {
         return id;
     }
@@ -68,7 +64,6 @@ public class AnomalyFlagRecord {
 
     public void setEmployee(EmployeeProfile employee) {
         this.employee = employee;
-        this.employeeId = employee.getId();
     }
 
     public ProductivityMetricRecord getMetric() {
@@ -77,15 +72,6 @@ public class AnomalyFlagRecord {
 
     public void setMetric(ProductivityMetricRecord metric) {
         this.metric = metric;
-        this.metricId = metric.getId();
-    }
-
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-    public Long getMetricId() {
-        return metricId;
     }
 
     public String getRuleCode() {
@@ -112,19 +98,19 @@ public class AnomalyFlagRecord {
         this.details = details;
     }
 
-    public LocalDateTime getFlaggedAt() {
-        return flaggedAt;
-    }
-
-    public void setFlaggedAt(LocalDateTime flaggedAt) {
-        this.flaggedAt = flaggedAt;
-    }
-
     public Boolean getResolved() {
         return resolved;
     }
 
     public void setResolved(Boolean resolved) {
         this.resolved = resolved;
+    }
+
+    public LocalDateTime getFlaggedAt() {
+        return flaggedAt;
+    }
+
+    public void setFlaggedAt(LocalDateTime flaggedAt) {
+        this.flaggedAt = flaggedAt;
     }
 }
