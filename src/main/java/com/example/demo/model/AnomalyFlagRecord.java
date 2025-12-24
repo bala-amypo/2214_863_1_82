@@ -11,22 +11,50 @@ public class AnomalyFlagRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long employeeId;
+    // ---------- RELATIONSHIPS ----------
+    @ManyToOne
+    @JoinColumn(name = "employee_id", insertable = false, updatable = false)
+    private EmployeeProfile employee;
 
+    @ManyToOne
+    @JoinColumn(name = "metric_id", insertable = false, updatable = false)
+    private ProductivityMetricRecord metric;
+
+    // ---------- FOREIGN KEYS ----------
+    private Long employeeId;
     private Long metricId;
 
     private String ruleCode;
-
     private String severity;
 
     @Column(columnDefinition = "TEXT")
     private String details;
 
     private LocalDateTime flaggedAt;
-
     private Boolean resolved;
 
+    // ---------- CONSTRUCTORS ----------
+
     public AnomalyFlagRecord() {}
+
+    // Constructor REQUIRED by ProductivityMetricService
+    public AnomalyFlagRecord(
+            EmployeeProfile employee,
+            ProductivityMetricRecord metric,
+            String ruleCode,
+            String severity,
+            String details
+    ) {
+        this.employee = employee;
+        this.metric = metric;
+        this.employeeId = employee.getId();
+        this.metricId = metric.getId();
+        this.ruleCode = ruleCode;
+        this.severity = severity;
+        this.details = details;
+        this.flaggedAt = LocalDateTime.now();
+        this.resolved = false;
+    }
 
     // ---------- GETTERS & SETTERS ----------
 
@@ -34,20 +62,30 @@ public class AnomalyFlagRecord {
         return id;
     }
 
+    public EmployeeProfile getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(EmployeeProfile employee) {
+        this.employee = employee;
+        this.employeeId = employee.getId();
+    }
+
+    public ProductivityMetricRecord getMetric() {
+        return metric;
+    }
+
+    public void setMetric(ProductivityMetricRecord metric) {
+        this.metric = metric;
+        this.metricId = metric.getId();
+    }
+
     public Long getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
-
     public Long getMetricId() {
         return metricId;
-    }
-
-    public void setMetricId(Long metricId) {
-        this.metricId = metricId;
     }
 
     public String getRuleCode() {
