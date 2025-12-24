@@ -4,6 +4,7 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.EmployeeProfile;
 import com.example.demo.repository.EmployeeProfileRepository;
 import com.example.demo.service.EmployeeProfileService;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,37 +13,42 @@ import java.util.Optional;
 @Service
 public class EmployeeProfileServiceImpl implements EmployeeProfileService {
 
-    private final EmployeeProfileRepository repository;
+    private final EmployeeProfileRepository employeeProfileRepository;
 
-    public EmployeeProfileServiceImpl(EmployeeProfileRepository repository) {
-        this.repository = repository;
+    // ✅ Constructor injection (MANDATORY for tests)
+    public EmployeeProfileServiceImpl(EmployeeProfileRepository employeeProfileRepository) {
+        this.employeeProfileRepository = employeeProfileRepository;
     }
 
     @Override
     public EmployeeProfile createEmployee(EmployeeProfile employee) {
-        return repository.save(employee);
+        return employeeProfileRepository.save(employee);
     }
 
     @Override
     public EmployeeProfile getEmployeeById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+        return employeeProfileRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Employee not found"));
     }
 
     @Override
     public List<EmployeeProfile> getAllEmployees() {
-        return repository.findAll();
+        return employeeProfileRepository.findAll();
     }
 
     @Override
     public Optional<EmployeeProfile> findByEmployeeId(String employeeId) {
-        return repository.findByEmployeeId(employeeId);
+        return employeeProfileRepository.findByEmployeeId(employeeId);
     }
 
     @Override
     public EmployeeProfile updateEmployeeStatus(Long id, boolean active) {
-        EmployeeProfile emp = getEmployeeById(id);
-        emp.setActive(active);
-        return repository.save(emp);
+        EmployeeProfile employee = employeeProfileRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Employee not found"));
+
+        employee.setActive(active);
+        return employeeProfileRepository.save(employee);
     }
 }
