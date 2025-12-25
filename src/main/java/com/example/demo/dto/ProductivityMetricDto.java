@@ -1,25 +1,17 @@
 package com.example.demo.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class ProductivityMetricDto {
 
-    private Long id;
     private Long employeeId;
     private LocalDate date;
     private Double hoursLogged;
     private Integer tasksCompleted;
     private Integer meetingsAttended;
     private Double productivityScore;
-    private String rawDataJson;
-    private LocalDateTime submittedAt;
 
     public ProductivityMetricDto() {}
-
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public Long getEmployeeId() { return employeeId; }
     public void setEmployeeId(Long employeeId) { this.employeeId = employeeId; }
@@ -38,10 +30,4 @@ public class ProductivityMetricDto {
 
     public Double getProductivityScore() { return productivityScore; }
     public void setProductivityScore(Double productivityScore) { this.productivityScore = productivityScore; }
-
-    public String getRawDataJson() { return rawDataJson; }
-    public void setRawDataJson(String rawDataJson) { this.rawDataJson = rawDataJson; }
-
-    public LocalDateTime getSubmittedAt() { return submittedAt; }
-    public void setSubmittedAt(LocalDateTime submittedAt) { this.submittedAt = submittedAt; }
 }
