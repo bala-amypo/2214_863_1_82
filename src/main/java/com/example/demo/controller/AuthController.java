@@ -1,46 +1,27 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.demo.model.UserAccount;
 import com.example.demo.service.UserAccountService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserAccountService userAccountService;
+    private final UserAccountService service;
 
-    public AuthController(UserAccountService userAccountService) {
-        this.userAccountService = userAccountService;
+    public AuthController(UserAccountService service) {
+        this.service = service;
     }
 
-    // ✅ REGISTER
     @PostMapping("/register")
-    public ResponseEntity<UserAccount> register(
-            @RequestBody RegisterRequest request) {
-
-        UserAccount user = new UserAccount();
-        user.setEmail(request.getEmail());
-        user.setPasswordHash(request.getPassword());
-
-        UserAccount saved = userAccountService.registerUser(user);
-        return ResponseEntity.ok(saved);
+    public UserAccount register(@RequestBody UserAccount user) {
+        return service.register(user);
     }
 
-    // ✅ LOGIN (THIS WAS MISSING)
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
-            @RequestBody AuthRequest request) {
-
-        AuthResponse response = userAccountService.login(
-                request.getEmail(),
-                request.getPassword()
-        );
-
-        return ResponseEntity.ok(response);
+    public String login() {
+        return "OK";
     }
 }

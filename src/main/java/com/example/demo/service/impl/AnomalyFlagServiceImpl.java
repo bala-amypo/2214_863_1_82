@@ -4,26 +4,26 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.AnomalyRule;
-import com.example.demo.repository.AnomalyRuleRepository;
-import com.example.demo.service.AnomalyRuleService;
+import com.example.demo.model.AnomalyFlagRecord;
+import com.example.demo.repository.AnomalyFlagRecordRepository;
+import com.example.demo.service.AnomalyFlagService;
 
 @Service
-public class AnomalyRuleServiceImpl implements AnomalyRuleService {
+public class AnomalyFlagServiceImpl implements AnomalyFlagService {
 
-    private final AnomalyRuleRepository repository;
+    private final AnomalyFlagRecordRepository repository;
 
-    public AnomalyRuleServiceImpl(AnomalyRuleRepository repository) {
+    public AnomalyFlagServiceImpl(AnomalyFlagRecordRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public AnomalyRule createRule(AnomalyRule rule) {
-        return repository.save(rule);
+    public AnomalyFlagRecord flagAnomaly(AnomalyFlagRecord record) {
+        return repository.save(record);
     }
 
     @Override
-    public List<AnomalyRule> getActiveRules() {
-        return repository.findByActiveTrue();
+    public List<AnomalyFlagRecord> getAllFlags() {
+        return repository.findAll();
     }
 }

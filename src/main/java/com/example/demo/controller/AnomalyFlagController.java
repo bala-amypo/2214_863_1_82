@@ -11,34 +11,19 @@ import com.example.demo.service.AnomalyFlagService;
 @RequestMapping("/api/anomalies")
 public class AnomalyFlagController {
 
-    private final AnomalyFlagService anomalyFlagService;
+    private final AnomalyFlagService service;
 
-    public AnomalyFlagController(AnomalyFlagService anomalyFlagService) {
-        this.anomalyFlagService = anomalyFlagService;
+    public AnomalyFlagController(AnomalyFlagService service) {
+        this.service = service;
     }
 
     @PostMapping
     public AnomalyFlagRecord create(@RequestBody AnomalyFlagRecord record) {
-        return anomalyFlagService.createFlag(record);
+        return service.flagAnomaly(record);
     }
 
     @GetMapping
     public List<AnomalyFlagRecord> getAll() {
-        return anomalyFlagService.getAllFlags();
-    }
-
-    @GetMapping("/employee/{employeeId}")
-    public List<AnomalyFlagRecord> byEmployee(@PathVariable Long employeeId) {
-        return anomalyFlagService.getFlagsByEmployeeId(employeeId);
-    }
-
-    @GetMapping("/metric/{metricId}")
-    public List<AnomalyFlagRecord> byMetric(@PathVariable Long metricId) {
-        return anomalyFlagService.getFlagsByMetricId(metricId);
-    }
-
-    @PutMapping("/{id}/resolve")
-    public AnomalyFlagRecord resolve(@PathVariable Long id) {
-        return anomalyFlagService.resolveFlag(id);
+        return service.getAllFlags();
     }
 }
