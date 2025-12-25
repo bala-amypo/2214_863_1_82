@@ -1,17 +1,15 @@
 package com.example.demo.model;
 
-import java.time.LocalDate;
-
 public class EmployeeProfile {
 
     private Long id;
     private String employeeId;
     private String fullName;
     private String email;
+    private Boolean active = true;
     private String teamName;
-    private String role;
-    private Boolean active;
-    private LocalDate createdAt;
+
+    public EmployeeProfile() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -25,15 +23,9 @@ public class EmployeeProfile {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public String getTeamName() { return teamName; }
-    public void setTeamName(String teamName) { this.teamName = teamName; }
-
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
-
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
 
-    public LocalDate getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDate createdAt) { this.createdAt = createdAt; }
+    public String getTeamName() { return teamName; }
+    public void setTeamName(String teamName) { this.teamName = teamName; }
 }
