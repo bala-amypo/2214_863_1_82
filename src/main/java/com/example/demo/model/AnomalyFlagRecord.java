@@ -15,18 +15,19 @@ public class AnomalyFlagRecord {
     @JoinColumn(name = "employee_id", nullable = false)
     private EmployeeProfile employee;
 
-    @ManyToOne
-    @JoinColumn(name = "metric_id")
-    private ProductivityMetricRecord metric;
+    private Long metricId;
 
     private String ruleCode;
     private String description;
-    private String status;
 
-    private LocalDateTime createdAt;
+    private boolean resolved;
+
+    private LocalDateTime flaggedAt;
     private LocalDateTime resolvedAt;
 
     public AnomalyFlagRecord() {
+        this.flaggedAt = LocalDateTime.now();
+        this.resolved = false;
     }
 
     public Long getId() {
@@ -45,12 +46,12 @@ public class AnomalyFlagRecord {
         this.employee = employee;
     }
 
-    public ProductivityMetricRecord getMetric() {
-        return metric;
+    public Long getMetricId() {
+        return metricId;
     }
 
-    public void setMetric(ProductivityMetricRecord metric) {
-        this.metric = metric;
+    public void setMetricId(Long metricId) {
+        this.metricId = metricId;
     }
 
     public String getRuleCode() {
@@ -69,20 +70,23 @@ public class AnomalyFlagRecord {
         this.description = description;
     }
 
-    public String getStatus() {
-        return status;
+    public boolean isResolved() {
+        return resolved;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setResolved(boolean resolved) {
+        this.resolved = resolved;
+        if (resolved) {
+            this.resolvedAt = LocalDateTime.now();
+        }
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getFlaggedAt() {
+        return flaggedAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setFlaggedAt(LocalDateTime flaggedAt) {
+        this.flaggedAt = flaggedAt;
     }
 
     public LocalDateTime getResolvedAt() {

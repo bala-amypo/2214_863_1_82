@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -11,14 +12,23 @@ public class EmployeeProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String email;
-    private String department;
+    @Column(unique = true, nullable = false)
+    private String employeeId;
+
+    private String fullName;
+    private String teamName;
+    private String role;
+
+    private Boolean active;
+
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnomalyFlagRecord> anomalyFlags;
 
     public EmployeeProfile() {
+        this.createdAt = LocalDateTime.now();
+        this.active = true;
     }
 
     public Long getId() {
@@ -29,28 +39,52 @@ public class EmployeeProfile {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getEmployeeId() {
+        return employeeId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public String getEmail() {
-        return email;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getTeamName() {
+        return teamName;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<AnomalyFlagRecord> getAnomalyFlags() {
