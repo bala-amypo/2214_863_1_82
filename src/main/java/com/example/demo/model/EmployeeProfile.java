@@ -16,7 +16,12 @@ public class EmployeeProfile {
     private String employeeId;
 
     private String fullName;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
     private String teamName;
+
     private String role;
 
     private Boolean active;
@@ -53,6 +58,14 @@ public class EmployeeProfile {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getTeamName() {
