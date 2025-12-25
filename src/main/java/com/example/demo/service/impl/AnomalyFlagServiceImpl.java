@@ -1,53 +1,29 @@
 package com.example.demo.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.AnomalyFlagRecord;
-import com.example.demo.repository.AnomalyFlagRecordRepository;
-import com.example.demo.service.AnomalyFlagService;
+import com.example.demo.model.AnomalyRule;
+import com.example.demo.repository.AnomalyRuleRepository;
+import com.example.demo.service.AnomalyRuleService;
 
 @Service
-public class AnomalyFlagServiceImpl implements AnomalyFlagService {
+public class AnomalyRuleServiceImpl implements AnomalyRuleService {
 
-    private final AnomalyFlagRecordRepository repository;
+    private final AnomalyRuleRepository repository;
 
-    public AnomalyFlagServiceImpl(AnomalyFlagRecordRepository repository) {
+    public AnomalyRuleServiceImpl(AnomalyRuleRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public AnomalyFlagRecord createFlag(AnomalyFlagRecord record) {
-        record.setResolved(false);
-        record.setFlaggedAt(LocalDateTime.now());
-        return repository.save(record);
+    public AnomalyRule createRule(AnomalyRule rule) {
+        return repository.save(rule);
     }
 
     @Override
-    public List<AnomalyFlagRecord> getAllFlags() {
-        return repository.findAll();
-    }
-
-    @Override
-    public List<AnomalyFlagRecord> getFlagsByEmployeeId(Long employeeId) {
-        return repository.findByEmployeeId(employeeId);
-    }
-
-    @Override
-    public List<AnomalyFlagRecord> getFlagsByMetricId(Long metricId) {
-        return repository.findByMetricId(metricId);
-    }
-
-    @Override
-    public AnomalyFlagRecord resolveFlag(Long id) {
-        AnomalyFlagRecord record = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Anomaly flag not found"));
-
-        record.setResolved(true);
-        record.setResolvedAt(LocalDateTime.now());
-        return repository.save(record);
+    public List<AnomalyRule> getActiveRules() {
+        return repository.findByActiveTrue();
     }
 }
