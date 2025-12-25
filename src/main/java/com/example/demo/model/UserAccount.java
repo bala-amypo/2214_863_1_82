@@ -1,113 +1,32 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(
-    name = "user_accounts",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email")
-    }
-)
 public class UserAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String username;
+    private String password;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @ElementCollection
+    private Set<String> roles;
 
-    @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
+    // ---- getters & setters ----
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-        name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id")
-    )
-    @Column(name = "role")
-    private Set<String> role = new HashSet<>();
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    /* ---------- CONSTRUCTORS ---------- */
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public UserAccount() {
-        // required by JPA
-    }
-
-    public UserAccount(
-            String username,
-            String email,
-            String passwordHash,
-            Set<String> role
-    ) {
-        this.username = username;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        if (role != null) {
-            this.role = role;
-        }
-    }
-
-    /* ---------- LIFECYCLE ---------- */
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    /* ---------- GETTERS & SETTERS ---------- */
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public Set<String> getRole() {
-        return role;
-    }
-
-    public void setRole(Set<String> role) {
-        this.role = role;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+    public Set<String> getRoles() { return roles; }
+    public void setRoles(Set<String> roles) { this.roles = roles; }
 }
