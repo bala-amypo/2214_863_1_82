@@ -1,8 +1,17 @@
 package com.example.demo.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
+@Entity
 public class EmployeeProfile {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String employeeId;
     private String fullName;
     private String email;
@@ -11,21 +20,51 @@ public class EmployeeProfile {
 
     public EmployeeProfile() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getEmployeeId() { return employeeId; }
-    public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getEmployeeId() {
+        return employeeId;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public String getFullName() {
+        return fullName;
+    }
 
-    public String getTeamName() { return teamName; }
-    public void setTeamName(String teamName) { this.teamName = teamName; }
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
 }

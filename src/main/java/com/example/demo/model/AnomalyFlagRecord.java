@@ -1,8 +1,17 @@
 package com.example.demo.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
+@Entity
 public class AnomalyFlagRecord {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long metricId;
     private String ruleCode;
     private String severity;
@@ -11,21 +20,51 @@ public class AnomalyFlagRecord {
 
     public AnomalyFlagRecord() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getMetricId() { return metricId; }
-    public void setMetricId(Long metricId) { this.metricId = metricId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getRuleCode() { return ruleCode; }
-    public void setRuleCode(String ruleCode) { this.ruleCode = ruleCode; }
+    public Long getMetricId() {
+        return metricId;
+    }
 
-    public String getSeverity() { return severity; }
-    public void setSeverity(String severity) { this.severity = severity; }
+    public void setMetricId(Long metricId) {
+        this.metricId = metricId;
+    }
 
-    public Boolean getResolved() { return resolved; }
-    public void setResolved(Boolean resolved) { this.resolved = resolved; }
+    public String getRuleCode() {
+        return ruleCode;
+    }
 
-    public String getDetails() { return details; }
-    public void setDetails(String details) { this.details = details; }
+    public void setRuleCode(String ruleCode) {
+        this.ruleCode = ruleCode;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(Boolean resolved) {
+        this.resolved = resolved;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
 }
