@@ -1,12 +1,16 @@
 package com.example.demo.service;
 
-import com.example.demo.model.EmployeeProfile;
 import java.util.Optional;
+
+import com.example.demo.model.EmployeeProfile;
 
 public interface EmployeeProfileService {
 
-    EmployeeProfile createEmployee(EmployeeProfile e);
+    EmployeeProfile createEmployee(EmployeeProfile employee);
+
     EmployeeProfile getEmployeeById(Long id);
+
     Optional<EmployeeProfile> findByEmployeeId(String employeeId);
+
     EmployeeProfile updateEmployeeStatus(Long id, boolean active);
 }

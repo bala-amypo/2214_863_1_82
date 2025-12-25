@@ -10,6 +10,8 @@ public class TeamSummaryRecord {
     private Integer anomalyCount;
     private LocalDate summaryDate;
 
+    public TeamSummaryRecord() {}
+
     public String getTeamName() { return teamName; }
     public void setTeamName(String teamName) { this.teamName = teamName; }
 
