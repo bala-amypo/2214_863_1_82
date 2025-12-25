@@ -1,22 +1,10 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
-
-@Entity
 public class AnomalyRule {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     private String ruleCode;
     private Double thresholdValue;
-    private Boolean active = true;
-
-    // ---- getters & setters ----
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    private Boolean active;
 
     public String getRuleCode() { return ruleCode; }
     public void setRuleCode(String ruleCode) { this.ruleCode = ruleCode; }
