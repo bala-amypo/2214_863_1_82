@@ -1,8 +1,7 @@
 package com.example.demo.model;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "anomaly_flag_records")
@@ -12,40 +11,46 @@ public class AnomalyFlagRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long employeeId;
+    @ManyToOne
+    @JoinColumn(name = "employee_id", nullable = false)
+    private EmployeeProfile employee;
 
-    private Long metricId;
+    @ManyToOne
+    @JoinColumn(name = "metric_id")
+    private ProductivityMetricRecord metric;
 
     private String ruleCode;
-
     private String description;
+    private String status;
 
-    private boolean resolved;
-
-    private LocalDateTime flaggedAt;
-
+    private LocalDateTime createdAt;
     private LocalDateTime resolvedAt;
 
-    // ===== getters & setters =====
+    public AnomalyFlagRecord() {
+    }
 
     public Long getId() {
         return id;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public EmployeeProfile getEmployee() {
+        return employee;
     }
 
-    public Long getMetricId() {
-        return metricId;
+    public void setEmployee(EmployeeProfile employee) {
+        this.employee = employee;
     }
 
-    public void setMetricId(Long metricId) {
-        this.metricId = metricId;
+    public ProductivityMetricRecord getMetric() {
+        return metric;
+    }
+
+    public void setMetric(ProductivityMetricRecord metric) {
+        this.metric = metric;
     }
 
     public String getRuleCode() {
@@ -64,20 +69,20 @@ public class AnomalyFlagRecord {
         this.description = description;
     }
 
-    public boolean isResolved() {
-        return resolved;
+    public String getStatus() {
+        return status;
     }
 
-    public void setResolved(boolean resolved) {
-        this.resolved = resolved;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public LocalDateTime getFlaggedAt() {
-        return flaggedAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setFlaggedAt(LocalDateTime flaggedAt) {
-        this.flaggedAt = flaggedAt;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalDateTime getResolvedAt() {
