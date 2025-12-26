@@ -1,40 +1,98 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.TeamSummaryRecord;
-import com.example.demo.service.TeamSummaryService;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/teams")
+@RequestMapping("/api/team-summaries")
 public class TeamSummaryController {
 
-    private final TeamSummaryService service;
+    private final EmployeeProfileRepository employeeRepo;
+    private final ProductivityMetricRecordRepository metricRepo;
+    private final AnomalyFlagRecordRepository anomalyRepo;
+    private final TeamSummaryRecordRepository summaryRepo;
 
-    public TeamSummaryController(TeamSummaryService service) {
-        this.service = service;
+    public TeamSummaryController(EmployeeProfileRepository employeeRepo,
+                                 ProductivityMetricRecordRepository metricRepo,
+                                 AnomalyFlagRecordRepository anomalyRepo,
+                                 TeamSummaryRecordRepository summaryRepo) {
+        this.employeeRepo = employeeRepo;
+        this.metricRepo = metricRepo;
+        this.anomalyRepo = anomalyRepo;
+        this.summaryRepo = summaryRepo;
     }
 
-    // ---------- REQUIRED ----------
+    // =================================================
+    // POST /api/team-summaries/generate?teamName=XXX
+    // =================================================
+    @PostMapping("/generate")
+    public TeamSummaryRecord generate(@RequestParam String teamName) {
 
-    @GetMapping("/{teamName}/summary")
-    public TeamSummaryRecord getSummary(@PathVariable String teamName) {
-        return service.generateSummary(teamName);
+        TeamSummaryRecord summary = new TeamSummaryRecord();
+        summary.setTeamName(teamName);
+        summary.setSummaryDate(LocalDate.now());
+
+        List<EmployeeProfile> employees = employeeRepo.findByTeamName(teamName);
+
+        if (employees.isEmpty()) {
+            summary.setAvgHoursLogged(0.0);
+            summary.setAvgScore(0.0);
+            summary.setAnomalyCount(0);
+            return summaryRepo.save(summary);
+        }
+
+        List<Long> empIds = employees.stream()
+                .map(EmployeeProfile::getId)
+                .toList();
+
+        List<ProductivityMetricRecord> metrics =
+                metricRepo.findByEmployeeIdIn(empIds);
+
+        double avgHours = metrics.stream()
+                .mapToDouble(ProductivityMetricRecord::getHoursLogged)
+                .average()
+                .orElse(0.0);
+
+        double avgScore = metrics.stream()
+                .mapToDouble(ProductivityMetricRecord::getProductivityScore)
+                .average()
+                .orElse(0.0);
+
+        summary.setAvgHoursLogged(avgHours);
+        summary.setAvgScore(avgScore);
+
+        int anomalyCount = anomalyRepo.findAll().size();
+        summary.setAnomalyCount(anomalyCount);
+
+        return summaryRepo.save(summary); // 🔥 SAVE IS IMPORTANT
     }
 
-    // ---------- SWAGGER-ONLY ----------
-
+    // =========================
+    // GET /api/team-summaries
+    // =========================
     @GetMapping
-    public List<TeamSummaryRecord> listAll() {
-        return List.of();
+    public List<TeamSummaryRecord> getAll() {
+        return summaryRepo.findAll();
     }
 
+    // =============================
+    // GET /api/team-summaries/{id}
+    // =============================
     @GetMapping("/{id}")
     public TeamSummaryRecord getById(@PathVariable Long id) {
-        TeamSummaryRecord t = new TeamSummaryRecord();
-        t.setId(id);
-        return t;
+        return summaryRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Team summary not found"));
+    }
+
+    // ==========================================
+    // GET /api/team-summaries/team/{teamName}
+    // ==========================================
+    @GetMapping("/team/{teamName}")
+    public List<TeamSummaryRecord> getByTeam(@PathVariable String teamName) {
+        return summaryRepo.findByTeamName(teamName);
     }
 }
