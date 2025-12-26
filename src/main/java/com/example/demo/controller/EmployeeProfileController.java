@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.web.bind.annotation.*;
@@ -32,17 +33,17 @@ public class EmployeeProfileController {
         return service.findByEmployeeId(employeeId);
     }
 
-// ----------- ADDITIONAL ENDPOINTS (Swagger completeness) -----------
+    // ----------- ADDITIONAL ENDPOINTS (Swagger completeness) -----------
 
-@GetMapping
-public List<EmployeeProfile> listAllEmployees() {
-    return employeeProfileService.getAllEmployees();
-}
+    @GetMapping
+    public List<EmployeeProfile> listAllEmployees() {
+        return service.getAllEmployees();
+    }
 
-@PutMapping("/{id}/status")
-public EmployeeProfile updateEmployeeStatus(
-        @PathVariable Long id,
-        @RequestParam boolean active) {
-    return employeeProfileService.updateEmployeeStatus(id, active);
-}
+    @PutMapping("/{id}/status")
+    public EmployeeProfile updateEmployeeStatus(
+            @PathVariable Long id,
+            @RequestParam boolean active) {
+        return service.updateEmployeeStatus(id, active);
+    }
 }
