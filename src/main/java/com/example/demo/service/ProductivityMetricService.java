@@ -13,7 +13,8 @@ public interface ProductivityMetricService {
 
     List<ProductivityMetricRecord> getAllMetrics();
 
+    // 🔹 Added (upgrade)
     List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId);
-ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord record);
 
+    ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord record);
 }

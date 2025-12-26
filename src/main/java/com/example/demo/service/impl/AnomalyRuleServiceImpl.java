@@ -11,26 +11,26 @@ import com.example.demo.service.AnomalyRuleService;
 @Service
 public class AnomalyRuleServiceImpl implements AnomalyRuleService {
 
-    private final AnomalyRuleRepository repository;
+    private final AnomalyRuleRepository ruleRepo;
 
-    public AnomalyRuleServiceImpl(AnomalyRuleRepository repository) {
-        this.repository = repository;
+    public AnomalyRuleServiceImpl(AnomalyRuleRepository ruleRepo) {
+        this.ruleRepo = ruleRepo;
     }
 
     @Override
     public AnomalyRule createRule(AnomalyRule rule) {
-        return repository.save(rule);
+        return ruleRepo.save(rule);
     }
 
     @Override
     public List<AnomalyRule> getActiveRules() {
-        return repository.findByActiveTrue();
+        return ruleRepo.findByActiveTrue();
     }
 
+    // 🔹 Added (upgrade)
     @Override
-public AnomalyRule updateRule(Long id, AnomalyRule rule) {
-    rule.setId(id);
-    return ruleRepo.save(rule);
-}
-
+    public AnomalyRule updateRule(Long id, AnomalyRule rule) {
+        rule.setId(id);
+        return ruleRepo.save(rule);
+    }
 }

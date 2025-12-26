@@ -10,5 +10,6 @@ public interface AnomalyRuleService {
 
     List<AnomalyRule> getActiveRules();
 
+    // 🔹 Added (upgrade)
     AnomalyRule updateRule(Long id, AnomalyRule rule);
 }

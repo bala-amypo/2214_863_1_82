@@ -12,35 +12,36 @@ import com.example.demo.service.ProductivityMetricService;
 @Service
 public class ProductivityMetricServiceImpl implements ProductivityMetricService {
 
-    private final ProductivityMetricRecordRepository repository;
+    private final ProductivityMetricRecordRepository metricRepo;
 
-    public ProductivityMetricServiceImpl(ProductivityMetricRecordRepository repository) {
-        this.repository = repository;
+    public ProductivityMetricServiceImpl(ProductivityMetricRecordRepository metricRepo) {
+        this.metricRepo = metricRepo;
     }
 
     @Override
     public ProductivityMetricRecord recordMetric(ProductivityMetricRecord record) {
-        return repository.save(record);
+        return metricRepo.save(record);
     }
 
     @Override
     public Optional<ProductivityMetricRecord> getMetricById(Long id) {
-        return repository.findById(id);
+        return metricRepo.findById(id);
     }
 
     @Override
     public List<ProductivityMetricRecord> getAllMetrics() {
-        return repository.findAll();
+        return metricRepo.findAll();
     }
+
+    // 🔹 Added (upgrade)
     @Override
-public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
-    return metricRepo.findByEmployeeId(employeeId);
-}
+    public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
+        return metricRepo.findByEmployeeId(employeeId);
+    }
 
-@Override
-public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord record) {
-    record.setId(id);
-    return metricRepo.save(record);
-}
-
+    @Override
+    public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord record) {
+        record.setId(id);
+        return metricRepo.save(record);
+    }
 }
