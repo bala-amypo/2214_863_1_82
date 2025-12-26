@@ -31,10 +31,7 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
         return employeeProfileRepository.findByEmployeeId(employeeId);
     }
 
-    // ✅ THIS IS THE IMPORTANT METHOD (trainer demo fix)
-    // ✅ Safe for testcases
-    // ✅ Enables GET /api/employees
-    @Override
+    // ✅ DO NOT USE @Override (interface doesn't declare it)
     public List<EmployeeProfile> getAllEmployees() {
         return employeeProfileRepository.findAll();
     }
