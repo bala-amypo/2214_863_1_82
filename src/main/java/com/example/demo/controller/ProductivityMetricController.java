@@ -45,8 +45,9 @@ public class ProductivityMetricController {
         return record;
     }
 
+    // 🔥 THIS IS THE ONLY IMPORTANT FIX
     @GetMapping("/employee/{employeeId}")
     public List<ProductivityMetricRecord> byEmployee(@PathVariable Long employeeId) {
-        return List.of();
+        return service.getMetricsByEmployee(employeeId);
     }
 }
