@@ -17,6 +17,8 @@ public class AnomalyRuleController {
         this.service = service;
     }
 
+    // ---------------- BASIC ENDPOINTS ----------------
+
     @PostMapping
     public AnomalyRule create(@RequestBody AnomalyRule rule) {
         return service.createRule(rule);
@@ -25,5 +27,19 @@ public class AnomalyRuleController {
     @GetMapping
     public List<AnomalyRule> getActiveRules() {
         return service.getActiveRules();
+    }
+
+    // ----------- ADDITIONAL ENDPOINTS (Swagger completeness) -----------
+
+    @GetMapping("/active")
+    public List<AnomalyRule> listOnlyActiveRules() {
+        return service.getActiveRules();
+    }
+
+    @PutMapping("/{id}")
+    public AnomalyRule updateRule(
+            @PathVariable Long id,
+            @RequestBody AnomalyRule rule) {
+        return service.updateRule(id, rule);
     }
 }
