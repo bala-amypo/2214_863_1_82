@@ -1,51 +1,57 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
+import com.example.demo.model.AnomalyFlagRecord;
+import com.example.demo.repository.AnomalyFlagRecordRepository;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.AnomalyFlagRecord;
-import com.example.demo.service.AnomalyFlagService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/anomalies")
 public class AnomalyFlagController {
 
-    private final AnomalyFlagService service;
+    private final AnomalyFlagRecordRepository anomalyFlagRepository;
 
-    public AnomalyFlagController(AnomalyFlagService service) {
-        this.service = service;
+    public AnomalyFlagController(AnomalyFlagRecordRepository anomalyFlagRepository) {
+        this.anomalyFlagRepository = anomalyFlagRepository;
     }
 
-    // ---------- REQUIRED ----------
-
+    // ================= CREATE ANOMALY =================
     @PostMapping
-    public AnomalyFlagRecord create(@RequestBody AnomalyFlagRecord record) {
-        return service.flagAnomaly(record);
+    public AnomalyFlagRecord create(@RequestBody AnomalyFlagRecord request) {
+
+        AnomalyFlagRecord flag = new AnomalyFlagRecord();
+        flag.setMetricId(request.getMetricId());
+        flag.setRuleCode(request.getRuleCode());
+        flag.setSeverity(request.getSeverity());
+        flag.setResolved(request.getResolved());
+        flag.setDetails(request.getDetails());
+
+        return anomalyFlagRepository.save(flag);
     }
 
+    // ================= GET ALL =================
     @GetMapping
     public List<AnomalyFlagRecord> getAll() {
-        return service.getAllFlags();
+        return anomalyFlagRepository.findAll();
     }
 
-    // ---------- SWAGGER-ONLY ----------
+    // ================= GET BY METRIC =================
+    @GetMapping("/metric/{metricId}")
+    public List<AnomalyFlagRecord> getByMetric(@PathVariable Long metricId) {
+        return anomalyFlagRepository.findByMetricId(metricId);
+    }
 
+    // ================= RESOLVE ANOMALY =================
     @PutMapping("/{id}/resolve")
     public AnomalyFlagRecord resolve(@PathVariable Long id) {
-        AnomalyFlagRecord f = new AnomalyFlagRecord();
-        f.setId(id);
-        f.setResolved(true);
-        return f;
-    }
 
-    @GetMapping("/employee/{employeeId}")
-    public List<AnomalyFlagRecord> byEmployee(@PathVariable Long employeeId) {
-        return List.of();
-    }
+        AnomalyFlagRecord flag = anomalyFlagRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Anomaly not found"));
 
-    @GetMapping("/metric/{metricId}")
-    public List<AnomalyFlagRecord> byMetric(@PathVariable Long metricId) {
-        return List.of();
+        // ONLY update resolved flag
+        flag.setResolved(true);
+
+        return anomalyFlagRepository.save(flag);
     }
 }

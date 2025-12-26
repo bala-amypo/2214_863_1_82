@@ -1,24 +1,31 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "anomaly_flag_record")
 public class AnomalyFlagRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "metric_id")
     private Long metricId;
+
+    @Column(name = "rule_code")
     private String ruleCode;
+
+    @Column(name = "severity")
     private String severity;
-    private Boolean resolved = false;
+
+    @Column(name = "resolved")
+    private Boolean resolved;
+
+    @Column(name = "details")
     private String details;
 
-    public AnomalyFlagRecord() {}
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;
