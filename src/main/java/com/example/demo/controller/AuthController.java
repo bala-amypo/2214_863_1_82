@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
+import com.example.demo.security.JwtUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -12,9 +13,12 @@ import java.util.Map;
 public class AuthController {
 
     private final UserAccountRepository userAccountRepository;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(UserAccountRepository userAccountRepository) {
+    public AuthController(UserAccountRepository userAccountRepository,
+                          JwtUtil jwtUtil) {
         this.userAccountRepository = userAccountRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     // -------------------------
@@ -22,16 +26,21 @@ public class AuthController {
     // -------------------------
     @PostMapping("/register")
     public UserAccount register(@RequestBody UserAccount user) {
-        return userAccountRepository.save(user);
+
+        UserAccount savedUser = userAccountRepository.save(user);
+
+        // Hide password in response (DB unchanged, testcases safe)
+        savedUser.setPassword(null);
+
+        return savedUser;
     }
 
     // -------------------------
-    // LOGIN (TOKEN RESPONSE)
+    // LOGIN (JWT TOKEN)
     // -------------------------
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody UserAccount request) {
 
-        // simple validation (mock)
         UserAccount user = userAccountRepository
                 .findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
@@ -40,10 +49,9 @@ public class AuthController {
             throw new RuntimeException("Invalid credentials");
         }
 
-        // generate simple token (NO JWT)
-        String token = user.getUsername() + "-token";
+        // REAL JWT TOKEN
+        String token = jwtUtil.generateToken(user.getUsername());
 
-        // return as JSON
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
 
