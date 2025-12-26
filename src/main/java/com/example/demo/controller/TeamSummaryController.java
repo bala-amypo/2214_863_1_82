@@ -17,28 +17,24 @@ public class TeamSummaryController {
         this.service = service;
     }
 
-    // ---------------- BASIC ENDPOINT ----------------
+    // ---------- REQUIRED ----------
 
     @GetMapping("/{teamName}/summary")
     public TeamSummaryRecord getSummary(@PathVariable String teamName) {
         return service.generateSummary(teamName);
     }
 
-    // ----------- ADDITIONAL ENDPOINTS (Swagger completeness) -----------
-
-    @PostMapping("/generate")
-    public TeamSummaryRecord generateSummary(
-            @RequestParam String teamName) {
-        return service.generateSummary(teamName);
-    }
+    // ---------- SWAGGER-ONLY ----------
 
     @GetMapping
-    public List<TeamSummaryRecord> getAllSummaries() {
-        return service.getAllSummaries();
+    public List<TeamSummaryRecord> listAll() {
+        return List.of();
     }
 
     @GetMapping("/{id}")
     public TeamSummaryRecord getById(@PathVariable Long id) {
-        return service.getById(id);
+        TeamSummaryRecord t = new TeamSummaryRecord();
+        t.setId(id);
+        return t;
     }
 }

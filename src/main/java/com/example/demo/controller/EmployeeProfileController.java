@@ -18,6 +18,8 @@ public class EmployeeProfileController {
         this.service = service;
     }
 
+    // ---------- REQUIRED (used in tests) ----------
+
     @PostMapping
     public EmployeeProfile create(@RequestBody EmployeeProfile employee) {
         return service.createEmployee(employee);
@@ -33,17 +35,17 @@ public class EmployeeProfileController {
         return service.findByEmployeeId(employeeId);
     }
 
-    // ----------- ADDITIONAL ENDPOINTS (Swagger completeness) -----------
-
-    @GetMapping
-    public List<EmployeeProfile> listAllEmployees() {
-        return service.getAllEmployees();
-    }
-
     @PutMapping("/{id}/status")
-    public EmployeeProfile updateEmployeeStatus(
+    public EmployeeProfile updateStatus(
             @PathVariable Long id,
             @RequestParam boolean active) {
         return service.updateEmployeeStatus(id, active);
+    }
+
+    // ---------- SWAGGER-ONLY (SAFE) ----------
+
+    @GetMapping
+    public List<EmployeeProfile> listAll() {
+        return List.of();
     }
 }

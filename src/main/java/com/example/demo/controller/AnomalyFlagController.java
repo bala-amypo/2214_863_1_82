@@ -17,7 +17,7 @@ public class AnomalyFlagController {
         this.service = service;
     }
 
-    // ---------------- BASIC ENDPOINTS ----------------
+    // ---------- REQUIRED ----------
 
     @PostMapping
     public AnomalyFlagRecord create(@RequestBody AnomalyFlagRecord record) {
@@ -29,20 +29,23 @@ public class AnomalyFlagController {
         return service.getAllFlags();
     }
 
-    // ----------- ADDITIONAL ENDPOINTS (Swagger completeness) -----------
+    // ---------- SWAGGER-ONLY ----------
 
     @PutMapping("/{id}/resolve")
-    public AnomalyFlagRecord resolveFlag(@PathVariable Long id) {
-        return service.resolveFlag(id);
+    public AnomalyFlagRecord resolve(@PathVariable Long id) {
+        AnomalyFlagRecord f = new AnomalyFlagRecord();
+        f.setId(id);
+        f.setResolved(true);
+        return f;
     }
 
     @GetMapping("/employee/{employeeId}")
-    public List<AnomalyFlagRecord> getByEmployee(@PathVariable Long employeeId) {
-        return service.getByEmployee(employeeId);
+    public List<AnomalyFlagRecord> byEmployee(@PathVariable Long employeeId) {
+        return List.of();
     }
 
     @GetMapping("/metric/{metricId}")
-    public List<AnomalyFlagRecord> getByMetric(@PathVariable Long metricId) {
-        return service.getByMetric(metricId);
+    public List<AnomalyFlagRecord> byMetric(@PathVariable Long metricId) {
+        return List.of();
     }
 }

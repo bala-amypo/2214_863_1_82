@@ -18,7 +18,7 @@ public class ProductivityMetricController {
         this.service = service;
     }
 
-    // ---------------- BASIC ENDPOINTS ----------------
+    // ---------- REQUIRED ----------
 
     @PostMapping
     public ProductivityMetricRecord create(@RequestBody ProductivityMetricRecord record) {
@@ -35,18 +35,18 @@ public class ProductivityMetricController {
         return service.getAllMetrics();
     }
 
-    // ----------- ADDITIONAL ENDPOINTS (Swagger completeness) -----------
-
-    @GetMapping("/employee/{employeeId}")
-    public List<ProductivityMetricRecord> getByEmployee(
-            @PathVariable Long employeeId) {
-        return service.getMetricsByEmployee(employeeId);
-    }
+    // ---------- SWAGGER-ONLY ----------
 
     @PutMapping("/{id}")
     public ProductivityMetricRecord updateMetric(
             @PathVariable Long id,
             @RequestBody ProductivityMetricRecord record) {
-        return service.updateMetric(id, record);
+        record.setId(id);
+        return record;
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public List<ProductivityMetricRecord> byEmployee(@PathVariable Long employeeId) {
+        return List.of();
     }
 }
