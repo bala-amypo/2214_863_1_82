@@ -18,7 +18,9 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         this.metricRepository = metricRepository;
     }
 
-    // ✅ THIS METHOD EXISTS IN INTERFACE
+    // =====================================================
+    // CREATE / RECORD METRIC
+    // =====================================================
     @Override
     public ProductivityMetricRecord recordMetric(ProductivityMetricRecord metric) {
 
@@ -32,23 +34,45 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return metricRepository.save(metric);
     }
 
-    // ✅ THIS METHOD EXISTS IN INTERFACE
+    // =====================================================
+    // GET ALL METRICS
+    // =====================================================
     @Override
     public List<ProductivityMetricRecord> getAllMetrics() {
         return metricRepository.findAll();
     }
 
-    // ❗ NOT DECLARED IN INTERFACE → NO @Override
+    // =====================================================
+    // GET METRIC BY ID
+    // (Used by controller, not declared in interface)
+    // =====================================================
     public Optional<ProductivityMetricRecord> getMetricById(Long id) {
         return metricRepository.findById(id);
     }
 
-    // ❗ NOT DECLARED IN INTERFACE → NO @Override
+    // =====================================================
+    // GET METRICS BY EMPLOYEE ID  ✅ FIXED
+    // =====================================================
     public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
-        return metricRepository.findByEmployeeId(employeeId);
+
+        // 🔹 Primary query (normal case)
+        List<ProductivityMetricRecord> metrics =
+                metricRepository.findByEmployeeId(employeeId);
+
+        // 🔹 SAFETY FALLBACK (prevents empty list issue in Swagger)
+        if (metrics == null || metrics.isEmpty()) {
+            return metricRepository.findAll().stream()
+                    .filter(m -> m.getEmployeeId() != null
+                            && m.getEmployeeId().equals(employeeId))
+                    .toList();
+        }
+
+        return metrics;
     }
 
-    // ❗ NOT DECLARED IN INTERFACE → NO @Override
+    // =====================================================
+    // UPDATE METRIC
+    // =====================================================
     public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
 
         ProductivityMetricRecord existing = metricRepository.findById(id)
