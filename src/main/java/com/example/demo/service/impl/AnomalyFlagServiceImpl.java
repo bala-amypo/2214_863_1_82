@@ -26,4 +26,21 @@ public class AnomalyFlagServiceImpl implements AnomalyFlagService {
     public List<AnomalyFlagRecord> getAllFlags() {
         return repository.findAll();
     }
+    @Override
+public AnomalyFlagRecord resolveFlag(Long id) {
+    AnomalyFlagRecord f = flagRepo.findById(id).orElseThrow();
+    f.setResolved(true);
+    return flagRepo.save(f);
+}
+
+@Override
+public List<AnomalyFlagRecord> getByEmployee(Long employeeId) {
+    return flagRepo.findByEmployeeId(employeeId);
+}
+
+@Override
+public List<AnomalyFlagRecord> getByMetric(Long metricId) {
+    return flagRepo.findByMetricId(metricId);
+}
+
 }

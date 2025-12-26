@@ -26,4 +26,11 @@ public class AnomalyRuleServiceImpl implements AnomalyRuleService {
     public List<AnomalyRule> getActiveRules() {
         return repository.findByActiveTrue();
     }
+
+    @Override
+public AnomalyRule updateRule(Long id, AnomalyRule rule) {
+    rule.setId(id);
+    return ruleRepo.save(rule);
+}
+
 }

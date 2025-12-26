@@ -14,4 +14,14 @@ public class TeamSummaryServiceImpl implements TeamSummaryService {
         record.setTeamName(teamName);
         return record;
     }
+    @Override
+public List<TeamSummaryRecord> getAllSummaries() {
+    return repo.findAll();
+}
+
+@Override
+public TeamSummaryRecord getById(Long id) {
+    return repo.findById(id).orElseThrow();
+}
+
 }

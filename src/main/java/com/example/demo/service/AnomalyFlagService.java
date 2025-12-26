@@ -9,4 +9,9 @@ public interface AnomalyFlagService {
     AnomalyFlagRecord flagAnomaly(AnomalyFlagRecord record);
 
     List<AnomalyFlagRecord> getAllFlags();
+
+    AnomalyFlagRecord resolveFlag(Long id);
+List<AnomalyFlagRecord> getByEmployee(Long employeeId);
+List<AnomalyFlagRecord> getByMetric(Long metricId);
+
 }
