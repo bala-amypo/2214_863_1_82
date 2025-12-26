@@ -18,10 +18,10 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         this.metricRepository = metricRepository;
     }
 
+    // ✅ THIS METHOD EXISTS IN INTERFACE
     @Override
     public ProductivityMetricRecord recordMetric(ProductivityMetricRecord metric) {
 
-        // 🔹 CALCULATE SCORE BEFORE SAVE (THIS WAS MISSING)
         double score = ProductivityCalculator.computeScore(
                 metric.getHoursLogged(),
                 metric.getTasksCompleted(),
@@ -29,26 +29,26 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         );
 
         metric.setProductivityScore(score);
-
         return metricRepository.save(metric);
     }
 
+    // ✅ THIS METHOD EXISTS IN INTERFACE
     @Override
     public List<ProductivityMetricRecord> getAllMetrics() {
         return metricRepository.findAll();
     }
 
-    @Override
+    // ❗ NOT DECLARED IN INTERFACE → NO @Override
     public Optional<ProductivityMetricRecord> getMetricById(Long id) {
         return metricRepository.findById(id);
     }
 
-    @Override
+    // ❗ NOT DECLARED IN INTERFACE → NO @Override
     public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
         return metricRepository.findByEmployeeId(employeeId);
     }
 
-    @Override
+    // ❗ NOT DECLARED IN INTERFACE → NO @Override
     public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
 
         ProductivityMetricRecord existing = metricRepository.findById(id)
@@ -59,7 +59,6 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         existing.setMeetingsAttended(updated.getMeetingsAttended());
         existing.setRawDataJson(updated.getRawDataJson());
 
-        // 🔹 RECALCULATE SCORE ON UPDATE
         double score = ProductivityCalculator.computeScore(
                 existing.getHoursLogged(),
                 existing.getTasksCompleted(),
@@ -67,7 +66,6 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         );
 
         existing.setProductivityScore(score);
-
         return metricRepository.save(existing);
     }
 }
