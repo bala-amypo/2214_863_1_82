@@ -31,4 +31,18 @@ public class EmployeeProfileController {
     public Optional<EmployeeProfile> getByEmployeeId(@PathVariable String employeeId) {
         return service.findByEmployeeId(employeeId);
     }
+
+// ----------- ADDITIONAL ENDPOINTS (Swagger completeness) -----------
+
+@GetMapping
+public List<EmployeeProfile> listAllEmployees() {
+    return employeeProfileService.getAllEmployees();
+}
+
+@PutMapping("/{id}/status")
+public EmployeeProfile updateEmployeeStatus(
+        @PathVariable Long id,
+        @RequestParam boolean active) {
+    return employeeProfileService.updateEmployeeStatus(id, active);
+}
 }
