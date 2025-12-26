@@ -2,43 +2,51 @@ package com.example.demo.controller;
 
 import com.example.demo.model.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private UserAccountRepository userAccountRepository;
+    private final UserAccountRepository userAccountRepository;
 
-    // -----------------------------
+    public AuthController(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
+    }
+
+    // -------------------------
     // REGISTER
-    // -----------------------------
+    // -------------------------
     @PostMapping("/register")
     public UserAccount register(@RequestBody UserAccount user) {
         return userAccountRepository.save(user);
     }
 
-    // -----------------------------
-    // LOGIN  ✅ FIXED
-    // -----------------------------
+    // -------------------------
+    // LOGIN (TOKEN RESPONSE)
+    // -------------------------
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> payload) {
+    public Map<String, String> login(@RequestBody UserAccount request) {
 
-        String username = payload.get("username");
-        String password = payload.get("password");
+        // simple validation (mock)
+        UserAccount user = userAccountRepository
+                .findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
-        if (username == null || password == null) {
-            return "Invalid credentials";
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
         }
 
-        return userAccountRepository
-                .findByUsername(username)
-                .filter(u -> u.getPassword().equals(password))
-                .map(u -> "Login successful")
-                .orElse("Invalid credentials");
+        // generate simple token (NO JWT)
+        String token = user.getUsername() + "-token";
+
+        // return as JSON
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+
+        return response;
     }
 }
