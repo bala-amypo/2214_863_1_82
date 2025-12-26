@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.model;
 
 public class AuthResponse {
 
@@ -6,6 +6,15 @@ public class AuthResponse {
 
     public AuthResponse() {}
 
-    public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
+    public AuthResponse(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
