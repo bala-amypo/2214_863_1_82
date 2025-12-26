@@ -1,51 +1,57 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.example.demo.model.EmployeeProfile;
+import com.example.demo.repository.EmployeeProfileRepository;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.EmployeeProfile;
-import com.example.demo.service.EmployeeProfileService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeProfileController {
 
-    private final EmployeeProfileService service;
+    private final EmployeeProfileRepository employeeRepo;
 
-    public EmployeeProfileController(EmployeeProfileService service) {
-        this.service = service;
+    public EmployeeProfileController(EmployeeProfileRepository employeeRepo) {
+        this.employeeRepo = employeeRepo;
     }
 
-    // ---------- REQUIRED (used in tests) ----------
-
+    // POST /api/employees
     @PostMapping
-    public EmployeeProfile create(@RequestBody EmployeeProfile employee) {
-        return service.createEmployee(employee);
+    public EmployeeProfile createEmployee(@RequestBody EmployeeProfile employee) {
+        return employeeRepo.save(employee);
     }
 
+    // GET /api/employees  ✅ FIXED
+    @GetMapping
+    public List<EmployeeProfile> getAllEmployees() {
+        return employeeRepo.findAll();
+    }
+
+    // GET /api/employees/{id}
     @GetMapping("/{id}")
-    public EmployeeProfile getById(@PathVariable Long id) {
-        return service.getEmployeeById(id);
+    public EmployeeProfile getEmployeeById(@PathVariable Long id) {
+        return employeeRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
     }
 
+    // GET /api/employees/code/{employeeId}
     @GetMapping("/code/{employeeId}")
-    public Optional<EmployeeProfile> getByEmployeeId(@PathVariable String employeeId) {
-        return service.findByEmployeeId(employeeId);
+    public EmployeeProfile getByEmployeeCode(@PathVariable String employeeId) {
+        return employeeRepo.findByEmployeeId(employeeId)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
     }
 
+    // PUT /api/employees/{id}/status?active=true
     @PutMapping("/{id}/status")
     public EmployeeProfile updateStatus(
             @PathVariable Long id,
             @RequestParam boolean active) {
-        return service.updateEmployeeStatus(id, active);
-    }
 
-    // ---------- SWAGGER-ONLY (SAFE) ----------
+        EmployeeProfile employee = employeeRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-    @GetMapping
-    public List<EmployeeProfile> listAll() {
-        return List.of();
+        employee.setActive(active);
+        return employeeRepo.save(employee);
     }
 }
