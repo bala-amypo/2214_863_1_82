@@ -32,4 +32,15 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
     public List<ProductivityMetricRecord> getAllMetrics() {
         return repository.findAll();
     }
+    @Override
+public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
+    return metricRepo.findByEmployeeId(employeeId);
+}
+
+@Override
+public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord record) {
+    record.setId(id);
+    return metricRepo.save(record);
+}
+
 }

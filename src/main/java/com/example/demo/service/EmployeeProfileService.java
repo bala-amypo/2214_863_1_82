@@ -13,4 +13,6 @@ public interface EmployeeProfileService {
     Optional<EmployeeProfile> findByEmployeeId(String employeeId);
 
     EmployeeProfile updateEmployeeStatus(Long id, boolean active);
+
+    List<EmployeeProfile> getAllEmployees();
 }

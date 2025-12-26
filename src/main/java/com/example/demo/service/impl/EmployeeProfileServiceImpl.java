@@ -39,4 +39,9 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
         emp.setActive(active);
         return repository.save(emp);
     }
+    @Override
+public List<EmployeeProfile> getAllEmployees() {
+    return employeeRepo.findAll();
+}
+
 }
