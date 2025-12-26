@@ -1,22 +1,25 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "anomaly_rule")
 public class AnomalyRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "rule_code")
     private String ruleCode;
-    private Double thresholdValue;
-    private Boolean active = true;
 
-    public AnomalyRule() {}
+    @Column(name = "threshold_value")
+    private Double thresholdValue;
+
+    @Column(name = "active")
+    private Boolean active;
+
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;

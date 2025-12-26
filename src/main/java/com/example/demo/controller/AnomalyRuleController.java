@@ -1,51 +1,64 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
+import com.example.demo.model.AnomalyRule;
+import com.example.demo.repository.AnomalyRuleRepository;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.AnomalyRule;
-import com.example.demo.service.AnomalyRuleService;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/anomaly-rules")
 public class AnomalyRuleController {
 
-    private final AnomalyRuleService service;
+    private final AnomalyRuleRepository anomalyRuleRepository;
 
-    public AnomalyRuleController(AnomalyRuleService service) {
-        this.service = service;
+    public AnomalyRuleController(AnomalyRuleRepository anomalyRuleRepository) {
+        this.anomalyRuleRepository = anomalyRuleRepository;
     }
 
-    // ---------- REQUIRED ----------
-
+    // ================= CREATE =================
     @PostMapping
-    public AnomalyRule create(@RequestBody AnomalyRule rule) {
-        return service.createRule(rule);
+    public AnomalyRule create(@RequestBody AnomalyRule request) {
+
+        AnomalyRule rule = new AnomalyRule();
+        rule.setRuleCode(request.getRuleCode());
+        rule.setThresholdValue(request.getThresholdValue());
+        rule.setActive(request.getActive());
+
+        return anomalyRuleRepository.save(rule);
     }
 
-    @GetMapping
-    public List<AnomalyRule> getActiveRules() {
-        return service.getActiveRules();
-    }
-
-    // ---------- SWAGGER-ONLY ----------
-
+    // ================= UPDATE =================
     @PutMapping("/{id}")
-    public AnomalyRule update(@PathVariable Long id, @RequestBody AnomalyRule rule) {
-        rule.setId(id);
-        return rule;
+    public AnomalyRule update(@PathVariable Long id,
+                              @RequestBody AnomalyRule request) {
+
+        AnomalyRule rule = anomalyRuleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rule not found"));
+
+        rule.setRuleCode(request.getRuleCode());
+        rule.setThresholdValue(request.getThresholdValue());
+        rule.setActive(request.getActive());
+
+        return anomalyRuleRepository.save(rule);
     }
 
+    // ================= GET BY ID =================
     @GetMapping("/{id}")
     public AnomalyRule getById(@PathVariable Long id) {
-        AnomalyRule r = new AnomalyRule();
-        r.setId(id);
-        return r;
+        return anomalyRuleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rule not found"));
     }
 
+    // ================= GET ALL =================
+    @GetMapping
+    public List<AnomalyRule> getAll() {
+        return anomalyRuleRepository.findAll();
+    }
+
+    // ================= GET ACTIVE =================
     @GetMapping("/active")
-    public List<AnomalyRule> active() {
-        return List.of();
+    public List<AnomalyRule> getActiveRules() {
+        return anomalyRuleRepository.findByActiveTrue();
     }
 }
