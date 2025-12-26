@@ -1,27 +1,44 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.UserAccount;
+import com.example.demo.repository.UserAccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.UserAccount;
-import com.example.demo.service.UserAccountService;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserAccountService service;
+    @Autowired
+    private UserAccountRepository userAccountRepository;
 
-    public AuthController(UserAccountService service) {
-        this.service = service;
-    }
-
+    // -----------------------------
+    // REGISTER
+    // -----------------------------
     @PostMapping("/register")
     public UserAccount register(@RequestBody UserAccount user) {
-        return service.register(user);
+        return userAccountRepository.save(user);
     }
 
+    // -----------------------------
+    // LOGIN  ✅ FIXED
+    // -----------------------------
     @PostMapping("/login")
-    public String login() {
-        return "OK";
+    public String login(@RequestBody Map<String, String> payload) {
+
+        String username = payload.get("username");
+        String password = payload.get("password");
+
+        if (username == null || password == null) {
+            return "Invalid credentials";
+        }
+
+        return userAccountRepository
+                .findByUsername(username)
+                .filter(u -> u.getPassword().equals(password))
+                .map(u -> "Login successful")
+                .orElse("Invalid credentials");
     }
 }
