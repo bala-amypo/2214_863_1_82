@@ -1,15 +1,15 @@
 package com.example.demo.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.example.demo.model.ProductivityMetricRecord;
+
+import java.util.List;
 
 public interface ProductivityMetricService {
 
-    ProductivityMetricRecord recordMetric(ProductivityMetricRecord record);
-
-    Optional<ProductivityMetricRecord> getMetricById(Long id);
+    ProductivityMetricRecord recordMetric(ProductivityMetricRecord metric);
 
     List<ProductivityMetricRecord> getAllMetrics();
+
+    // 🔥 ADD THIS METHOD (REQUIRED)
+    List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId);
 }
