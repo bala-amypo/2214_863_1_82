@@ -11,9 +11,7 @@ public interface ProductivityMetricService {
 
     List<ProductivityMetricRecord> getAllMetrics();
 
-    // 🔥 REQUIRED for GET /api/metrics/employee/{id}
     List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId);
 
-    // 🔥 REQUIRED for GET /api/metrics/{id}
     Optional<ProductivityMetricRecord> getMetricById(Long id);
 }

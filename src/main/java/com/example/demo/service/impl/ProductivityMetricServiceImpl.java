@@ -31,32 +31,20 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return metricRepository.save(metric);
     }
 
-    // =====================================================
-    // GET ALL METRICS
-    // =====================================================
     @Override
     public List<ProductivityMetricRecord> getAllMetrics() {
         return metricRepository.findAll();
     }
 
-    // =====================================================
-    // GET METRIC BY ID
-    // (Used by controller, not declared in interface)
-    // =====================================================
     public Optional<ProductivityMetricRecord> getMetricById(Long id) {
         return metricRepository.findById(id);
     }
 
-    // =====================================================
-    // GET METRICS BY EMPLOYEE ID  ✅ FIXED
-    // =====================================================
     public List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId) {
 
-        // 🔹 Primary query (normal case)
         List<ProductivityMetricRecord> metrics =
                 metricRepository.findByEmployeeId(employeeId);
 
-        // 🔹 SAFETY FALLBACK (prevents empty list issue in Swagger)
         if (metrics == null || metrics.isEmpty()) {
             return metricRepository.findAll().stream()
                     .filter(m -> m.getEmployeeId() != null
@@ -67,9 +55,6 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return metrics;
     }
 
-    // =====================================================
-    // UPDATE METRIC
-    // =====================================================
     public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
 
         ProductivityMetricRecord existing = metricRepository.findById(id)
