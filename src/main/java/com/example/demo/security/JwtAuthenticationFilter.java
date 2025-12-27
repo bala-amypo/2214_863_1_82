@@ -39,7 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 String username = jwtTokenProvider.getUsernameFromToken(token);
 
-                // 🔑 CREATE AUTHENTICATION
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 username,
@@ -51,7 +50,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
-                // 🔑 SET INTO SECURITY CONTEXT
                 SecurityContextHolder.getContext()
                         .setAuthentication(authentication);
             }

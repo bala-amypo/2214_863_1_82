@@ -45,7 +45,6 @@ public class JwtTokenProvider {
         }
     }
 
-    // Extract username from token
     public String getUsernameFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
