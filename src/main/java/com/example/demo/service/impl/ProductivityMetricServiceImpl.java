@@ -18,9 +18,6 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         this.metricRepository = metricRepository;
     }
 
-    // =====================================================
-    // CREATE / RECORD METRIC
-    // =====================================================
     @Override
     public ProductivityMetricRecord recordMetric(ProductivityMetricRecord metric) {
 

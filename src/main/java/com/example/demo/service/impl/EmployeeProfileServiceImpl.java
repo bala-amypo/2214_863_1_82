@@ -17,34 +17,22 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
         this.employeeProfileRepository = employeeProfileRepository;
     }
 
-    // -------------------------------
-    // CREATE EMPLOYEE
-    // -------------------------------
     @Override
     public EmployeeProfile createEmployee(EmployeeProfile employee) {
         return employeeProfileRepository.save(employee);
     }
 
-    // -------------------------------
-    // GET EMPLOYEE BY DB ID
-    // -------------------------------
     @Override
     public EmployeeProfile getEmployeeById(Long id) {
         return employeeProfileRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
     }
 
-    // -------------------------------
-    // GET EMPLOYEE BY EMPLOYEE CODE
-    // -------------------------------
     @Override
     public Optional<EmployeeProfile> findByEmployeeId(String employeeId) {
         return employeeProfileRepository.findByEmployeeId(employeeId);
     }
-
-    // -------------------------------
-    // UPDATE EMPLOYEE STATUS
-    // -------------------------------
+    
     @Override
     public EmployeeProfile updateEmployeeStatus(Long id, boolean active) {
         EmployeeProfile employee = getEmployeeById(id);
