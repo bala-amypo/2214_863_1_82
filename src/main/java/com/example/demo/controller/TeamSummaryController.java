@@ -26,9 +26,6 @@ public class TeamSummaryController {
         this.summaryRepo = summaryRepo;
     }
 
-    // =================================================
-    // POST /api/team-summaries/generate?teamName=XXX
-    // =================================================
     @PostMapping("/generate")
     public TeamSummaryRecord generate(@RequestParam String teamName) {
 
@@ -68,29 +65,20 @@ public class TeamSummaryController {
         int anomalyCount = anomalyRepo.findAll().size();
         summary.setAnomalyCount(anomalyCount);
 
-        return summaryRepo.save(summary); // 🔥 SAVE IS IMPORTANT
+        return summaryRepo.save(summary);
     }
 
-    // =========================
-    // GET /api/team-summaries
-    // =========================
     @GetMapping
     public List<TeamSummaryRecord> getAll() {
         return summaryRepo.findAll();
     }
 
-    // =============================
-    // GET /api/team-summaries/{id}
-    // =============================
     @GetMapping("/{id}")
     public TeamSummaryRecord getById(@PathVariable Long id) {
         return summaryRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Team summary not found"));
     }
 
-    // ==========================================
-    // GET /api/team-summaries/team/{teamName}
-    // ==========================================
     @GetMapping("/team/{teamName}")
     public List<TeamSummaryRecord> getByTeam(@PathVariable String teamName) {
         return summaryRepo.findByTeamName(teamName);

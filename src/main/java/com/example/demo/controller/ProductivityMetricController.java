@@ -18,7 +18,6 @@ public class ProductivityMetricController {
         this.service = service;
     }
 
-    // ---------- REQUIRED ----------
 
     @PostMapping
     public ProductivityMetricRecord create(@RequestBody ProductivityMetricRecord record) {
@@ -35,7 +34,6 @@ public class ProductivityMetricController {
         return service.getAllMetrics();
     }
 
-    // ---------- SWAGGER-ONLY ----------
 
     @PutMapping("/{id}")
     public ProductivityMetricRecord updateMetric(
@@ -45,7 +43,6 @@ public class ProductivityMetricController {
         return record;
     }
 
-    // 🔥 THIS IS THE ONLY IMPORTANT FIX
     @GetMapping("/employee/{employeeId}")
     public List<ProductivityMetricRecord> byEmployee(@PathVariable Long employeeId) {
         return service.getMetricsByEmployee(employeeId);

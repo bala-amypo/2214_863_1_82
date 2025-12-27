@@ -19,8 +19,6 @@ public class AnomalyRule {
     @Column(name = "active")
     private Boolean active;
 
-    // ===== Getters & Setters =====
-
     public Long getId() {
         return id;
     }

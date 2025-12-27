@@ -52,7 +52,6 @@ public class AnomalyRuleController {
         return anomalyRuleRepository.findAll();
     }
 
-    // ================= GET ACTIVE =================
     @GetMapping("/active")
     public List<AnomalyRule> getActiveRules() {
         return anomalyRuleRepository.findByActiveTrue();
