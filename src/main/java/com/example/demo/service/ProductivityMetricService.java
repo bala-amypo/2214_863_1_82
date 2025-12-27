@@ -7,10 +7,8 @@ import java.util.Optional;
 
 public interface ProductivityMetricService {
 
-    // already existing
     ProductivityMetricRecord recordMetric(ProductivityMetricRecord metric);
 
-    // already existing
     List<ProductivityMetricRecord> getAllMetrics();
 
     // 🔥 REQUIRED for GET /api/metrics/employee/{id}

@@ -16,7 +16,6 @@ public class AnomalyFlagController {
         this.anomalyFlagRepository = anomalyFlagRepository;
     }
 
-    // ================= CREATE ANOMALY =================
     @PostMapping
     public AnomalyFlagRecord create(@RequestBody AnomalyFlagRecord request) {
 
@@ -30,26 +29,22 @@ public class AnomalyFlagController {
         return anomalyFlagRepository.save(flag);
     }
 
-    // ================= GET ALL =================
     @GetMapping
     public List<AnomalyFlagRecord> getAll() {
         return anomalyFlagRepository.findAll();
     }
 
-    // ================= GET BY METRIC =================
     @GetMapping("/metric/{metricId}")
     public List<AnomalyFlagRecord> getByMetric(@PathVariable Long metricId) {
         return anomalyFlagRepository.findByMetricId(metricId);
     }
 
-    // ================= RESOLVE ANOMALY =================
     @PutMapping("/{id}/resolve")
     public AnomalyFlagRecord resolve(@PathVariable Long id) {
 
         AnomalyFlagRecord flag = anomalyFlagRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Anomaly not found"));
 
-        // ONLY update resolved flag
         flag.setResolved(true);
 
         return anomalyFlagRepository.save(flag);

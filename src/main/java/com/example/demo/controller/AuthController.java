@@ -21,23 +21,16 @@ public class AuthController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    // -------------------------
-    // REGISTER
-    // -------------------------
     @PostMapping("/register")
     public UserAccount register(@RequestBody UserAccount user) {
 
         UserAccount savedUser = userAccountRepository.save(user);
 
-        // Hide password ONLY in response (DB unchanged, tests safe)
         savedUser.setPassword(null);
 
         return savedUser;
     }
 
-    // -------------------------
-    // LOGIN (JWT TOKEN)
-    // -------------------------
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody UserAccount request) {
 
@@ -49,7 +42,6 @@ public class AuthController {
             throw new RuntimeException("Invalid credentials");
         }
 
-        // ✅ REAL JWT TOKEN
         String token = jwtTokenProvider.generateToken(user.getUsername());
 
         Map<String, String> response = new HashMap<>();

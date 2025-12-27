@@ -16,7 +16,6 @@ public class AnomalyRuleController {
         this.anomalyRuleRepository = anomalyRuleRepository;
     }
 
-    // ================= CREATE =================
     @PostMapping
     public AnomalyRule create(@RequestBody AnomalyRule request) {
 
@@ -28,7 +27,6 @@ public class AnomalyRuleController {
         return anomalyRuleRepository.save(rule);
     }
 
-    // ================= UPDATE =================
     @PutMapping("/{id}")
     public AnomalyRule update(@PathVariable Long id,
                               @RequestBody AnomalyRule request) {
@@ -43,14 +41,12 @@ public class AnomalyRuleController {
         return anomalyRuleRepository.save(rule);
     }
 
-    // ================= GET BY ID =================
     @GetMapping("/{id}")
     public AnomalyRule getById(@PathVariable Long id) {
         return anomalyRuleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Rule not found"));
     }
 
-    // ================= GET ALL =================
     @GetMapping
     public List<AnomalyRule> getAll() {
         return anomalyRuleRepository.findAll();
