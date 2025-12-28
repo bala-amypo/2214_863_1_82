@@ -55,16 +55,34 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         return metrics;
     }
 
-    public ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated) {
+    public ProductivityMetricRecord updateMetric(Long id,
+                                                 ProductivityMetricRecord updated) {
 
         ProductivityMetricRecord existing = metricRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Metric not found"));
 
-        existing.setHoursLogged(updated.getHoursLogged());
-        existing.setTasksCompleted(updated.getTasksCompleted());
-        existing.setMeetingsAttended(updated.getMeetingsAttended());
-        existing.setRawDataJson(updated.getRawDataJson());
+       
+        if (updated.getHoursLogged() != null) {
+            existing.setHoursLogged(updated.getHoursLogged());
+        }
 
+        if (updated.getTasksCompleted() != null) {
+            existing.setTasksCompleted(updated.getTasksCompleted());
+        }
+
+        if (updated.getMeetingsAttended() != null) {
+            existing.setMeetingsAttended(updated.getMeetingsAttended());
+        }
+
+        if (updated.getDate() != null) {
+            existing.setDate(updated.getDate());
+        }
+
+        if (updated.getRawDataJson() != null) {
+            existing.setRawDataJson(updated.getRawDataJson());
+        }
+
+        
         double score = ProductivityCalculator.computeScore(
                 existing.getHoursLogged(),
                 existing.getTasksCompleted(),
@@ -72,6 +90,7 @@ public class ProductivityMetricServiceImpl implements ProductivityMetricService 
         );
 
         existing.setProductivityScore(score);
+
         return metricRepository.save(existing);
     }
 }
