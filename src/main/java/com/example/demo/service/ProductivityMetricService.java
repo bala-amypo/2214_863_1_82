@@ -11,7 +11,9 @@ public interface ProductivityMetricService {
 
     List<ProductivityMetricRecord> getAllMetrics();
 
+    Optional<ProductivityMetricRecord> getMetricById(Long id);
+
     List<ProductivityMetricRecord> getMetricsByEmployee(Long employeeId);
 
-    Optional<ProductivityMetricRecord> getMetricById(Long id);
+    ProductivityMetricRecord updateMetric(Long id, ProductivityMetricRecord updated);
 }
