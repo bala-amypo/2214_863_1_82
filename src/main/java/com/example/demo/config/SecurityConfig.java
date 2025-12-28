@@ -24,10 +24,10 @@ public class SecurityConfig {
             
             .csrf(csrf -> csrf.disable())
 
-            // Authorization rules
+          
             .authorizeHttpRequests(auth -> auth
 
-                // Public endpoints
+                
                 .requestMatchers(
                         "/auth/**",
                         "/swagger-ui/**",
