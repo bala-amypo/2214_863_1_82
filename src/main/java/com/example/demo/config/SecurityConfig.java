@@ -20,20 +20,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // Disable CSRF for REST APIs
+            
             .csrf(csrf -> csrf.disable())
 
-            // Authorization rules
+            
             .authorizeHttpRequests(auth -> auth
 
-                // Public endpoints
                 .requestMatchers(
                         "/auth/**",
                         "/swagger-ui/**",
                         "/v3/api-docs/**"
                 ).permitAll()
 
-                // Protected APIs (JWT required, no role restriction)
+                
                 .requestMatchers("/api/metrics/**").authenticated()
                 .requestMatchers("/api/employees/**").authenticated()
                 .requestMatchers("/api/anomaly-rules/**").authenticated()
