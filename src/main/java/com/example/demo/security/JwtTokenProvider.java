@@ -12,7 +12,7 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     // IMPORTANT: length >= 32 characters for HS256
-    private static final String SECRET_KEY =
+    private static final String SECRET_KEY = //verify jwt token
             "demo-secret-key-12345-demo-secret-key";
 
     private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour
